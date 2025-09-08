@@ -1,0 +1,200 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/network.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/network.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/generated/d2c_packets.pb.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/generated/d2c_packets.pb.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/generated/c2d_packets.pb.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/generated/c2d_packets.pb.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/generated/c2c_packets.pb.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/generated/c2c_packets.pb.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/nanopb/pb_decode.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/nanopb/pb_decode.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/nanopb/pb_common.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/nanopb/pb_common.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/nanopb/pb_encode.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/nanopb/pb_encode.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "common/src/log.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/common/src/log.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "server/src/callback.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/server/src/callback.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "server/src/network.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/server/src/network.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Icommon/src",
+      "-Icommon/src/nanopb",
+      "-Icommon/src/generated",
+      "-o",
+      "build/server",
+      "server/src/main.c"
+    ],
+    "directory": "/home/nicola/Workspace/C/IDCP",
+    "file": "/home/nicola/Workspace/C/IDCP/server/src/main.c",
+    "output": "/home/nicola/Workspace/C/IDCP/build/server"
+  }
+]

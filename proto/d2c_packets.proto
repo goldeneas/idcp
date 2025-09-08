@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+import "nanopb.proto";
+
+message motd_packet {
+  required string serverName = 1 [(nanopb).max_length = 255];
+  required string motd = 2;
+  required uint32 connectedClients = 3;
+}
+
+message d2c_envelope {
+  oneof payload {
+    motd_packet motd = 1;
+  }
+}

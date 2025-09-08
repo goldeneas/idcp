@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+import "nanopb.proto";
+
+message greet_packet {
+  required string destinationName = 1 [(nanopb).max_length = 255];
+  required uint32 sourcePort = 2;
+}
+
+message c2d_envelope {
+  oneof payload {
+    greet_packet greet = 1;
+  }
+}

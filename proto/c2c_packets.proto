@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+import "nanopb.proto";
+
+message message_packet {
+  required string text = 1 [(nanopb).max_length = 255];
+  required uint32 size = 2;
+}
+
+message c2c_envelope {
+  oneof payload {
+    message_packet message = 1;
+  }
+}

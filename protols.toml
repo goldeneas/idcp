@@ -1,0 +1,2 @@
+[config]
+include_paths = ["nanopb"] # Include paths to look for protofiles during parsing
