@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "network.h": "c",
-        "d2c_packets.pb.h": "c"
-    }
-}
