@@ -19,8 +19,8 @@ void connection_cb(uv_stream_t* server, int status) {
 
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
         char address[40];
-        get_client_address(client, address, 39);
-        int port = get_client_port(client);
+        get_socket_addr(client, address, 39);
+        int port = get_socket_port(client);
 
         log_info("A new client has connected! [%s:%hu]", address, port);
         uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_buffer_cb);

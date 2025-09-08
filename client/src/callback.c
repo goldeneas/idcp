@@ -30,7 +30,6 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
 
 }
 
-// TODO: Broken (maybe)
 void after_write_cb(uv_write_t* wr, int status) {
     write_req_t* req = (write_req_t*) wr;
 
