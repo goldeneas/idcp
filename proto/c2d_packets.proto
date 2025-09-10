@@ -7,13 +7,13 @@ message greet_packet {
   optional uint32 source_port = 2;
 }
 
-message list_clients_packet {
+message client_list_request {
 
 }
 
 message c2d_envelope {
   oneof payload {
     greet_packet greet = 1;
-    list_clients_packet list_clients = 2;
+    client_list_request client_list_request = 2;
   }
 }

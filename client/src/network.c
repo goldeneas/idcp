@@ -19,8 +19,8 @@ void send_greet(uv_tcp_t* server, char* destination_name, uint32_t source_port) 
     SEND_PACKET_BASE(greet, c2d_envelope, packet, server);
 }
 
-void list_clients(uv_tcp_t* server) {
-    list_clients_packet packet = list_clients_packet_init_zero;
+void send_client_list_request(uv_tcp_t* server) {
+    client_list_request packet = client_list_request_init_zero;
     
-    SEND_PACKET_BASE(list_clients, c2d_envelope, packet, server);
+    SEND_PACKET_BASE(client_list_request, c2d_envelope, packet, server);
 }

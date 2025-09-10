@@ -2,7 +2,10 @@
 #include "common/assert_wrapper.h"
 #include "common/log.h"
 #include "common/network.h"
+#include "common/wrapper/client.h"
+#include "common/wrapper/client_list.h"
 #include "network.h"
+#include "network_handlers.h"
 #include "pb.h"
 #include "pb_decode.h"
 #include "c2d_packets.pb.h"
@@ -62,14 +65,7 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         log_debug("Received a message that is not a c2d_envelope");
         return;
     }
-    
-    log_info("Got message: %u", envelope.which_payload);
-    greet_packet* greet = (greet_packet*) &envelope.payload.greet;
-    log_info("greet is: %s", greet->destination_name);
 
-    log_info("Answering with client list...");
-    char clients[][16] = {
-        "hello",
-        "world"
-    };
+    log_debug("A client sent a message!");
+    handle_c2d_packet(&envelope, stream);
 }

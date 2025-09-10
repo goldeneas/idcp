@@ -51,7 +51,7 @@ Each packet will be specified in JSON format.
             source_port: number,
         }
 
-**List Clients**
+**Client List Request**
 
         {
 

@@ -3,6 +3,7 @@
 #include "common/log.h"
 #include "network.h"
 #include "common/network.h"
+#include "network_handlers.h"
 #include "pb_decode.h"
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@ void connect_cb(uv_connect_t* client, int status) {
     uv_read_start(client->handle, alloc_buffer_cb, read_buffer_cb);
     log_info("Connected to server!");
 
-    send_greet((uv_tcp_t*) client->handle, "test", 32);
+    send_client_list_request((uv_tcp_t*) client->handle);
 }
 
 void alloc_buffer_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf) {
@@ -53,7 +54,6 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         return;
     }
 
-    log_info("Sever sent message!");
-    client_list_packet* list = (client_list_packet*) &envelope.payload.client_list;
-    log_info("list is of %i count", list->clients_count);
+    log_debug("Received message from server");
+    handle_d2c_packet(&envelope, stream);
 }

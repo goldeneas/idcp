@@ -9,7 +9,7 @@
 PB_BIND(greet_packet, greet_packet, 2)
 
 
-PB_BIND(list_clients_packet, list_clients_packet, AUTO)
+PB_BIND(client_list_request, client_list_request, AUTO)
 
 
 PB_BIND(c2d_envelope, c2d_envelope, 2)
