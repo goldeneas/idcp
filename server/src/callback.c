@@ -9,6 +9,7 @@
 #include "pb.h"
 #include "pb_decode.h"
 #include "c2d_packets.pb.h"
+#include "server_context.h"
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -58,6 +59,7 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         return;
     }
 
+    server_context* server_context = stream->loop->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     c2d_envelope envelope = c2d_envelope_init_zero;
@@ -67,5 +69,5 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     }
 
     log_debug("A client sent a message!");
-    handle_c2d_packet(&envelope, stream);
+    handle_c2d_packet(&envelope, stream, server_context);
 }

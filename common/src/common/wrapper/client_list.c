@@ -1,6 +1,7 @@
 #include "client_list.h"
 #include "common/log.h"
 #include "common/wrapper/client.h"
+#include <math.h>
 
 void client_list_append(client_info client, client_list* client_list) {
     if (client_list->clients_count >= CLIENT_LIST_MAX_COUNT) {

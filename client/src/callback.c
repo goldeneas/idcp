@@ -1,4 +1,5 @@
 #include "callback.h"
+#include "client_context.h"
 #include "d2c_packets.pb.h"
 #include "common/log.h"
 #include "network.h"
@@ -46,6 +47,7 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         return;
     }
 
+    client_context* client_context = stream->loop->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     d2c_envelope envelope = d2c_envelope_init_zero;
@@ -55,5 +57,5 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     }
 
     log_debug("Received message from server");
-    handle_d2c_packet(&envelope, stream);
+    handle_d2c_packet(&envelope, stream, client_context);
 }

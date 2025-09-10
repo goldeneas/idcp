@@ -1,4 +1,5 @@
 #include "d2c_packets.pb.h"
+#include "server_context.h"
 #include "settings.h"
 #include "callback.h"
 #include <netinet/in.h>
@@ -9,8 +10,12 @@
 #include <uv.h>
 #include <uv/unix.h>
 
+
 int main(void) {
+    server_context server_context = server_context_init();
+
     uv_loop_t* loop = uv_default_loop();
+    loop->data = &server_context;
 
     uv_tcp_t server;
     uv_tcp_init(loop, &server);

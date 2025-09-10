@@ -1,3 +1,4 @@
+#include "client_context.h"
 #include "settings.h"
 #include "callback.h"
 #include <netinet/in.h>
@@ -6,7 +7,10 @@
 #include <uv.h>
 
 int main(void) {
+    client_context client_context = client_context_init();
+
     uv_loop_t* loop = uv_default_loop();
+    loop->data = &client_context;
 
     uv_tcp_t server;
     uv_tcp_init(loop, &server);

@@ -41,6 +41,7 @@ Each packet can be sent:
 - Client -> Client [C2C]
 
 Each packet will be specified in JSON format.
+Each packet is defined in a .proto file. Some more fields may be present in the actual struct resulting from the compilation of the .proto file.
 
 ## C2D
 
