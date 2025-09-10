@@ -7,12 +7,24 @@
 
 #pragma once
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <time.h>
 
 #define LOG_VERSION "0.1.0"
+
+#define FATAL(msg)                                        \
+  do {                                                    \
+    fprintf(stderr,                                       \
+            "Fatal error in %s on line %d: %s\n",         \
+            __FILE__,                                     \
+            __LINE__,                                     \
+            msg);                                         \
+    fflush(stderr);                                       \
+    abort();                                              \
+  } while (0)
 
 typedef struct {
   va_list ap;

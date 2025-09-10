@@ -22,7 +22,7 @@
             return;                                                                                 \
         }                                                                                           \
                                                                                                     \
-        write_req_t* wr = alloc_write_request(envelope_size);                                       \
+        write_req* wr = alloc_write_request(envelope_size);                                       \
                                                                                                     \
         pb_ostream_t pb_stream = pb_ostream_from_buffer((pb_byte_t*) wr->buf.base, wr->buf.len);    \
         bool status = pb_encode(&pb_stream, envelope_struct##_fields, &envelope);                   \
@@ -35,8 +35,8 @@
         uv_write(&wr->req, stream, &wr->buf, 1, write_cb);                                          \
     } while(0)                                                                                      \
 
-write_req_t* alloc_write_request(size_t base_size) {
-    write_req_t* wr = malloc(sizeof(write_req_t));
+write_req* alloc_write_request(size_t base_size) {
+    write_req* wr = malloc(sizeof(write_req));
 
     wr->buf = uv_buf_init(malloc(base_size), base_size); 
 

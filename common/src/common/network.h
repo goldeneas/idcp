@@ -7,10 +7,10 @@
 #include <sys/socket.h>
 #include <uv.h>
 
-typedef struct _write_req_t {
+typedef struct write_req_s {
     uv_write_t req;
     uv_buf_t buf;
-} write_req_t;
+} write_req;
 
 #define SEND_PACKET_BASE(tag_name, envelope_struct, packet, tcp_handle)                 \
     do {                                                                                \
@@ -21,8 +21,8 @@ typedef struct _write_req_t {
         send_##envelope_struct(envelope, (uv_stream_t*) tcp_handle, after_write_cb);    \
     } while(0)
 
-write_req_t* alloc_write_request(size_t len);
-void destroy_write_request(write_req_t* req);
+write_req* alloc_write_request(size_t len);
+void destroy_write_request(write_req* req);
 
 void get_socket_addr(uv_tcp_t* client, char* address, int len);
 in_port_t get_socket_port(uv_tcp_t* client);

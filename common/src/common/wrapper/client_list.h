@@ -1,0 +1,15 @@
+#pragma once
+#include "pb.h"
+#include <stdint.h>
+#include "client.h"
+
+#define CLIENT_LIST_MAX_COUNT 1024
+
+typedef struct client_list_s {
+    client arr[CLIENT_LIST_MAX_COUNT];
+    pb_size_t clients_count;
+} client_list;
+
+void client_list_append(client client, client_list* client_list);
+void client_list_strcpy(char dst[][CLIENT_LIST_NAME_MAX_SIZE], client_list* client_list);
+void client_list_remove(client_id id, client_list* client_list);

@@ -1,11 +1,11 @@
 #include "callback.h"
-#include "assert_wrapper.h"
-#include "log.h"
+#include "common/assert_wrapper.h"
+#include "common/log.h"
+#include "common/network.h"
 #include "network.h"
 #include "pb.h"
 #include "pb_decode.h"
 #include "c2d_packets.pb.h"
-#include "common.h"
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -36,7 +36,7 @@ void alloc_buffer_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf) 
 }
 
 void after_write_cb(uv_write_t* wr, int status) {
-    write_req_t* req = (write_req_t*) wr;
+    write_req* req = (write_req*) wr;
 
     free(req->buf.base);
     free(req);
@@ -72,6 +72,4 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         "hello",
         "world"
     };
-
-    send_client_list((uv_tcp_t*) stream, clients, 2);
 }

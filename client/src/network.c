@@ -1,8 +1,8 @@
 #include "network.h"
-#include "common.h"
 #include "callback.h"
 #include "c2d_packets.pb.h"
-#include "d2c_packets.pb.h"
+#include "common/network.h"
+#include "common/wrapper/strncpy.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <uv.h>
@@ -14,7 +14,7 @@ void send_greet(uv_tcp_t* server, char* destination_name, uint32_t source_port) 
     packet.has_destination_name = true;
 
     packet.source_port = source_port;
-    strcpy(packet.destination_name, destination_name);
+    destination_name_strncpy(packet.destination_name, destination_name);
 
     SEND_PACKET_BASE(greet, c2d_envelope, packet, server);
 }

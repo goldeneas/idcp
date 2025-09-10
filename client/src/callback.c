@@ -1,12 +1,9 @@
 #include "callback.h"
-#include "common.h"
 #include "d2c_packets.pb.h"
-#include "log.h"
+#include "common/log.h"
 #include "network.h"
-#include "c2d_packets.pb.h"
-#include "common.h"
+#include "common/network.h"
 #include "pb_decode.h"
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <uv.h>
@@ -29,7 +26,7 @@ void alloc_buffer_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf) 
 }
 
 void after_write_cb(uv_write_t* wr, int status) {
-    write_req_t* req = (write_req_t*) wr;
+    write_req* req = (write_req*) wr;
 
     free(req->buf.base);
     free(req);
