@@ -10,10 +10,14 @@ int main(void) {
     client_context client_context = client_context_init();
 
     uv_loop_t* loop = uv_default_loop();
-    loop->data = &client_context;
+
+    uv_tty_t tty;
+    uv_tty_init(loop, &tty, 0, 1);
+    uv_read_start((uv_stream_t*) &tty, alloc_buffer_cb, read_tty_buffer_cb);
 
     uv_tcp_t server;
     uv_tcp_init(loop, &server);
+    server.data = &client_context;
 
     struct sockaddr_in address;
     uv_ip4_addr(SERVER_ADDR, SERVER_PORT, &address);

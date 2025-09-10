@@ -15,10 +15,10 @@ int main(void) {
     server_context server_context = server_context_init();
 
     uv_loop_t* loop = uv_default_loop();
-    loop->data = &server_context;
 
     uv_tcp_t server;
     uv_tcp_init(loop, &server);
+    server.data = &server_context;
 
     struct sockaddr_in address;
     uv_ip4_addr("0.0.0.0", SERVER_PORT, &address);

@@ -27,7 +27,7 @@ void connection_cb(uv_stream_t* server, int status) {
         int port = get_socket_port(client);
 
         log_info("A new client has connected! [%s:%hu]", address, port);
-        uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_buffer_cb);
+        uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_d2c_buffer_cb);
     } else {
         uv_close((uv_handle_t*) client, NULL);
         free(client);
@@ -49,7 +49,7 @@ void after_write_cb(uv_write_t* wr, int status) {
     log_error("Error on write: %s", uv_strerror(status));
 }
 
-void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
+void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     if (nread < 0 && nread != UV_EOF) {
         FATAL("nread < 0 while in read_buffer_cb");
     }
@@ -59,7 +59,8 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
         return;
     }
 
-    server_context* server_context = stream->loop->data;
+    // TODO: Might be causing segfault
+    server_context* server_context = stream->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     c2d_envelope envelope = c2d_envelope_init_zero;

@@ -16,7 +16,7 @@ void connect_cb(uv_connect_t* client, int status) {
         return;
     }
 
-    uv_read_start(client->handle, alloc_buffer_cb, read_buffer_cb);
+    uv_read_start(client->handle, alloc_buffer_cb, read_d2c_buffer_cb);
     log_info("Connected to server!");
 
     send_client_list_request((uv_tcp_t*) client->handle);
@@ -37,17 +37,18 @@ void after_write_cb(uv_write_t* wr, int status) {
     log_error("Error on write: %s", uv_strerror(status));
 }
 
-void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
+void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     if (nread < 0 && nread != UV_EOF) {
-        FATAL("nread < 0 while in read_buffer_cb");
+        uv_close((uv_handle_t*) stream, NULL);
+        FATAL("nread < 0");
     }
 
     if (nread == UV_EOF) {
-        log_debug("nread == 0");
+        log_info("Connection to server lost. Please connect to a new server");
         return;
     }
 
-    client_context* client_context = stream->loop->data;
+    client_context* client_context = stream->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     d2c_envelope envelope = d2c_envelope_init_zero;
@@ -58,4 +59,16 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
 
     log_debug("Received message from server");
     handle_d2c_packet(&envelope, stream, client_context);
+}
+
+void read_tty_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
+    if (nread < 0 && nread != UV_EOF) {
+        uv_close((uv_handle_t*) stream, NULL);
+        FATAL("nread < 0");
+    }
+
+    if (nread == UV_EOF) {
+        log_debug("nread == 0");
+        return;
+    }
 }
