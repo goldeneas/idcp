@@ -30,13 +30,19 @@ void connection_cb(uv_stream_t* server, int status) {
     }
 }
 
-void after_write_cb(uv_write_t* req, int status) {
-
-}
-
 void alloc_buffer_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf) {
     buf->base = malloc(suggested_size);
     buf->len = suggested_size;
+}
+
+void after_write_cb(uv_write_t* wr, int status) {
+    write_req_t* req = (write_req_t*) wr;
+
+    free(req->buf.base);
+    free(req);
+
+    if (status == 0) { return; }
+    log_error("Error on write: %s", uv_strerror(status));
 }
 
 void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
@@ -52,9 +58,20 @@ void read_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     c2d_envelope envelope = c2d_envelope_init_zero;
-    ASSERT(pb_decode(&pb_stream, c2d_envelope_fields, &envelope));
+    if (!pb_decode(&pb_stream, c2d_envelope_fields, &envelope)) {
+        log_debug("Received a message that is not a c2d_envelope");
+        return;
+    }
     
     log_info("Got message: %u", envelope.which_payload);
-    greet_packet* greet = (greet_packet*) &envelope.payload;
-    log_info("greet is: %s", greet->destinationName);
+    greet_packet* greet = (greet_packet*) &envelope.payload.greet;
+    log_info("greet is: %s", greet->destination_name);
+
+    log_info("Answering with client list...");
+    char clients[][16] = {
+        "hello",
+        "world"
+    };
+
+    send_client_list((uv_tcp_t*) stream, clients, 2);
 }

@@ -8,11 +8,6 @@
 #include <sys/socket.h>
 #include <uv.h>
 #include <uv/unix.h>
-#include "common.h"
-
-motd_packet motd = {
-    .connectedClients = 1,
-};
 
 int main(void) {
     uv_loop_t* loop = uv_default_loop();

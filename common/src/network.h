@@ -12,6 +12,15 @@ typedef struct _write_req_t {
     uv_buf_t buf;
 } write_req_t;
 
+#define SEND_PACKET_BASE(tag_name, envelope_struct, packet, tcp_handle)                 \
+    do {                                                                                \
+        envelope_struct envelope = envelope_struct##_init_zero;                         \
+        envelope.which_payload = envelope_struct##_##tag_name##_tag;                    \
+        envelope.payload.tag_name = packet;                                             \
+                                                                                        \
+        send_##envelope_struct(envelope, (uv_stream_t*) tcp_handle, after_write_cb);    \
+    } while(0)
+
 write_req_t* alloc_write_request(size_t len);
 void destroy_write_request(write_req_t* req);
 

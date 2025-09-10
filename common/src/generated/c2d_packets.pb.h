@@ -11,14 +11,21 @@
 
 /* Struct definitions */
 typedef struct _greet_packet {
-    char destinationName[256];
-    uint32_t sourcePort;
+    bool has_destination_name;
+    char destination_name[255];
+    bool has_source_port;
+    uint32_t source_port;
 } greet_packet;
+
+typedef struct _list_clients_packet {
+    char dummy_field;
+} list_clients_packet;
 
 typedef struct _c2d_envelope {
     pb_size_t which_payload;
     union {
         greet_packet greet;
+        list_clients_packet list_clients;
     } payload;
 } c2d_envelope;
 
@@ -28,40 +35,53 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define greet_packet_init_default                {"", 0}
+#define greet_packet_init_default                {false, "", false, 0}
+#define list_clients_packet_init_default         {0}
 #define c2d_envelope_init_default                {0, {greet_packet_init_default}}
-#define greet_packet_init_zero                   {"", 0}
+#define greet_packet_init_zero                   {false, "", false, 0}
+#define list_clients_packet_init_zero            {0}
 #define c2d_envelope_init_zero                   {0, {greet_packet_init_zero}}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define greet_packet_destinationName_tag         1
-#define greet_packet_sourcePort_tag              2
+#define greet_packet_destination_name_tag        1
+#define greet_packet_source_port_tag             2
 #define c2d_envelope_greet_tag                   1
+#define c2d_envelope_list_clients_tag            2
 
 /* Struct field encoding specification for nanopb */
 #define greet_packet_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, STRING,   destinationName,   1) \
-X(a, STATIC,   REQUIRED, UINT32,   sourcePort,        2)
+X(a, STATIC,   OPTIONAL, STRING,   destination_name,   1) \
+X(a, STATIC,   OPTIONAL, UINT32,   source_port,       2)
 #define greet_packet_CALLBACK NULL
 #define greet_packet_DEFAULT NULL
 
+#define list_clients_packet_FIELDLIST(X, a) \
+
+#define list_clients_packet_CALLBACK NULL
+#define list_clients_packet_DEFAULT NULL
+
 #define c2d_envelope_FIELDLIST(X, a) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (payload,greet,payload.greet),   1)
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,greet,payload.greet),   1) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,list_clients,payload.list_clients),   2)
 #define c2d_envelope_CALLBACK NULL
 #define c2d_envelope_DEFAULT NULL
 #define c2d_envelope_payload_greet_MSGTYPE greet_packet
+#define c2d_envelope_payload_list_clients_MSGTYPE list_clients_packet
 
 extern const pb_msgdesc_t greet_packet_msg;
+extern const pb_msgdesc_t list_clients_packet_msg;
 extern const pb_msgdesc_t c2d_envelope_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define greet_packet_fields &greet_packet_msg
+#define list_clients_packet_fields &list_clients_packet_msg
 #define c2d_envelope_fields &c2d_envelope_msg
 
 /* Maximum encoded size of messages (where known) */
 #define C2D_PACKETS_PB_H_MAX_SIZE                c2d_envelope_size
-#define c2d_envelope_size                        267
-#define greet_packet_size                        264
+#define c2d_envelope_size                        266
+#define greet_packet_size                        263
+#define list_clients_packet_size                 0
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -3,12 +3,17 @@ syntax = "proto2";
 import "nanopb.proto";
 
 message greet_packet {
-  required string destinationName = 1 [(nanopb).max_length = 255];
-  required uint32 sourcePort = 2;
+  optional string destination_name = 1 [(nanopb).max_size = 255];
+  optional uint32 source_port = 2;
+}
+
+message list_clients_packet {
+
 }
 
 message c2d_envelope {
   oneof payload {
     greet_packet greet = 1;
+    list_clients_packet list_clients = 2;
   }
 }

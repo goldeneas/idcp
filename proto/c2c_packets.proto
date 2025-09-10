@@ -3,8 +3,8 @@ syntax = "proto2";
 import "nanopb.proto";
 
 message message_packet {
-  required string text = 1 [(nanopb).max_length = 255];
-  required uint32 size = 2;
+  optional string text = 1 [(nanopb).max_size = 255];
+  optional uint32 size = 2;
 }
 
 message c2c_envelope {

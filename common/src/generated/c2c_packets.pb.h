@@ -11,7 +11,9 @@
 
 /* Struct definitions */
 typedef struct _message_packet {
-    char text[256];
+    bool has_text;
+    char text[255];
+    bool has_size;
     uint32_t size;
 } message_packet;
 
@@ -28,9 +30,9 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define message_packet_init_default              {"", 0}
+#define message_packet_init_default              {false, "", false, 0}
 #define c2c_envelope_init_default                {0, {message_packet_init_default}}
-#define message_packet_init_zero                 {"", 0}
+#define message_packet_init_zero                 {false, "", false, 0}
 #define c2c_envelope_init_zero                   {0, {message_packet_init_zero}}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -40,8 +42,8 @@ extern "C" {
 
 /* Struct field encoding specification for nanopb */
 #define message_packet_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, STRING,   text,              1) \
-X(a, STATIC,   REQUIRED, UINT32,   size,              2)
+X(a, STATIC,   OPTIONAL, STRING,   text,              1) \
+X(a, STATIC,   OPTIONAL, UINT32,   size,              2)
 #define message_packet_CALLBACK NULL
 #define message_packet_DEFAULT NULL
 
@@ -60,8 +62,8 @@ extern const pb_msgdesc_t c2c_envelope_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define C2C_PACKETS_PB_H_MAX_SIZE                c2c_envelope_size
-#define c2c_envelope_size                        267
-#define message_packet_size                      264
+#define c2c_envelope_size                        266
+#define message_packet_size                      263
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -9,7 +9,10 @@
 PB_BIND(motd_packet, motd_packet, 2)
 
 
-PB_BIND(d2c_envelope, d2c_envelope, 2)
+PB_BIND(client_list_packet, client_list_packet, 4)
+
+
+PB_BIND(d2c_envelope, d2c_envelope, 4)
 
 
 

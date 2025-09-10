@@ -47,8 +47,14 @@ Each packet will be specified in JSON format.
 **Greet Request**
 
         {
-            destinationName: string,
-            sourcePort: number,
+            destination_name: string, [max_size = 256]
+            source_port: number,
+        }
+
+**List Clients**
+
+        {
+
         }
 
 ## D2C
@@ -56,16 +62,21 @@ Each packet will be specified in JSON format.
 **MOTD**
 
         {
-            serverName: string,
-            motd: string,
-            connectedClients: uint,
+            server_name: string, [max_size = 256]
+            motd: string, [max_size = 1024]
         }
 
 **Greet Established**
 
         {
-            clientAddress: string,
-            clientPort: number,
+            client_address: string,
+            client_port: number,
+        }
+
+**Client List**
+
+        {
+            clients: string[], [max_size = 16, max_count = 1024]
         }
 
 ## C2C
@@ -73,6 +84,6 @@ Each packet will be specified in JSON format.
 **Message**
 
         {
-            text: string,
+            text: string, [max_size = 256]
             size: uint,
         }
