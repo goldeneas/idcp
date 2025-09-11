@@ -1,6 +1,7 @@
 #include "client_list.h"
+#include "common.pb.h"
 #include "common/log.h"
-#include "common/wrapper/client.h"
+#include "common/wrapper/client_info.h"
 #include <math.h>
 
 void client_list_append(client_info client, client_list* client_list) {
@@ -13,12 +14,10 @@ void client_list_append(client_info client, client_list* client_list) {
     client_list->clients_count += 1;
 }
 
-void client_list_strcpy(char dst[][CLIENT_LIST_NAME_MAX_SIZE], client_list* client_list) {
+void client_list_strcpy(common_client* dst, client_list* client_list) {
     for (uint32_t i = 0; i < client_list->clients_count; i++) {
         client_info* entry = &client_list->arr[i];
-
-        strncpy(dst[i], entry->name, CLIENT_LIST_NAME_MAX_SIZE);
-        dst[i][CLIENT_LIST_NAME_MAX_SIZE - 1] = '\0';
+        common_client_from_client_info(&dst[i], entry);
     }
 }
 

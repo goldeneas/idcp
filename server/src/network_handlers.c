@@ -1,7 +1,6 @@
 #include "network_handlers.h"
 #include "common/log.h"
 #include "common/network_handlers.h"
-#include "common/wrapper/client.h"
 #include "common/wrapper/client_list.h"
 #include "network.h"
 #include "server_context.h"

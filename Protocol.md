@@ -14,6 +14,9 @@ Suppose we have a Discovery node A, a Client node B and a Client node C both con
 Suppose Client B greets Client C through the Discovery node A.  
 If Client C wants to talk to Client B, it will also send its greet to Client C thorugh the Discovery node; otherwise the greet will be ignored.
 
+## Client IDs
+Every client is assigned an ID by the server. All valid IDs are always positive and they will start at index 1. Indexes can be used to reference a client without using their name. Index 0 is used to reference themselves.
+
 ## Discovery Node
 
 The Discovery node has the following responsibilities:

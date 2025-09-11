@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+import "nanopb.proto";
+
+package common;
+
+message client {
+  optional string name = 1 [(nanopb).max_size = 16];
+  optional uint32 id = 2;
+}

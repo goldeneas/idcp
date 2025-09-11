@@ -2,10 +2,10 @@
 #include "common/assert_wrapper.h"
 #include "common/log.h"
 #include "common/network.h"
-#include "common/wrapper/client.h"
 #include "common/wrapper/client_list.h"
 #include "network.h"
 #include "network_handlers.h"
+#include "settings.h"
 #include "pb.h"
 #include "pb_decode.h"
 #include "c2d_packets.pb.h"
@@ -28,6 +28,12 @@ void connection_cb(uv_stream_t* server, int status) {
 
         log_info("A new client has connected! [%s:%hu]", address, port);
         uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_d2c_buffer_cb);
+
+        server_context* context = server->loop->data;
+        client_info info = client_info_init(address);
+        client_list_append(info, &context->client_list);
+
+        send_motd(client, SERVER_NAME, SERVER_MOTD);
     } else {
         uv_close((uv_handle_t*) client, NULL);
         free(client);
@@ -59,8 +65,7 @@ void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
         return;
     }
 
-    // TODO: Might be causing segfault
-    server_context* server_context = stream->data;
+    server_context* server_context = stream->loop->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     c2d_envelope envelope = c2d_envelope_init_zero;
