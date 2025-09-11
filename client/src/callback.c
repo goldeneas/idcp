@@ -1,5 +1,6 @@
 #include "callback.h"
 #include "client_context.h"
+#include "command_handlers.h"
 #include "d2c_packets.pb.h"
 #include "common/log.h"
 #include "network.h"
@@ -48,7 +49,7 @@ void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
         return;
     }
 
-    client_context* client_context = stream->data;
+    client_context* client_context = stream->loop->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
 
     d2c_envelope envelope = d2c_envelope_init_zero;
@@ -71,4 +72,7 @@ void read_tty_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
         log_debug("nread == 0");
         return;
     }
+
+    client_context* context = stream->loop->data;
+    handle_tty_command(buf, context);
 }
