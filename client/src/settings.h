@@ -2,4 +2,6 @@
 #define DEFAULT_BACKLOG 128
 #define SERVER_ADDR "0.0.0.0"
 
+#define STDIN_CMD_SYMBOL '/'
+
 #define MAX_STDIN_CMD_SIZE 256
