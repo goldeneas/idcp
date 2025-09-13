@@ -1,0 +1,47 @@
+#include "greet_table.h"
+#include "common/linked_list.h"
+#include "common/list.h"
+#include "common/wrapper/client_info.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+bool greet_entry_equals(void* left, void* right) {
+    greet_entry* left_entry = (greet_entry*) left;
+    greet_entry* right_entry = (greet_entry*) right;
+
+    return client_info_equals(&left_entry->client, &right_entry->client);
+}
+
+list greet_table_init(void) {
+    list list = list_init(sizeof(greet_entry), greet_entry_equals);
+    return list;
+}
+
+greet_entry greet_entry_init(client_id id) {
+    greet_entry entry;
+    entry.client = id;
+    entry.list = linked_list_init(client_id_equals, sizeof(client_id));
+
+    return entry;
+}
+
+void greet_table_set_greet(client_id to, client_id from, list* table) {
+    greet_entry* target = list_find((greet_entry*) &from, table);
+        
+    if (target == NULL) {
+        greet_entry entry = greet_entry_init(from);
+        target = list_push_back(&entry, table);
+    }
+
+    linked_list* client_list = &target->list; 
+    if (linked_list_contains(&to, client_list)) {
+        return;
+    }
+
+    linked_list_append(&to, client_list);
+}
+
+void greet_table_destroy(list* greet_table) {
+    list_destroy(greet_table);
+}

@@ -24,7 +24,7 @@ void client_list_strcpy(common_client* dst, client_list* client_list) {
 void client_list_remove(client_id id, client_list* client_list) {
     for (int i = 0; i < client_list->clients_count; i++) {
         client_info* client = &client_list->arr[i];
-        if (!client_equals(&id, &client->id)) { continue; }
+        if (!client_info_equals(&id, &client->id)) { continue; }
 
         FATAL("client_list_remove not implemented yet");
     }

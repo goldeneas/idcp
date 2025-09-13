@@ -18,8 +18,18 @@ client_info client_info_init(const char* name) {
     return client_info;
 }
 
-bool client_equals(client_id* left, client_id* right) {
-    return *left == *right;
+bool client_id_equals(void* left, void* right) {
+    client_id* left_id = (client_id*) left;
+    client_id* right_id = (client_id*) right;
+
+    return left_id == right_id;
+}
+
+bool client_info_equals(void* left, void* right) {
+    client_info* left_info = (client_info*) left;
+    client_info* right_info = (client_info*) right;
+
+    return client_id_equals(&left_info->id, &right_info->id);
 }
 
 void common_client_from_client_info(common_client* dst, client_info* src) {

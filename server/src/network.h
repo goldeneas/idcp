@@ -1,6 +1,6 @@
 #pragma once
 #include "pb.h"
-#include "common/wrapper/client_list.h"
+#include "wrapper/client_list.h"
 #include <stdint.h>
 #include <uv.h>
 

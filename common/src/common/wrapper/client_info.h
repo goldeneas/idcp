@@ -13,5 +13,6 @@ typedef struct client_s {
 } client_info;
 
 client_info client_info_init(const char* name);
+bool client_info_equals(void* left, void* right);
+bool client_id_equals(void* left, void* right);
 void common_client_from_client_info(common_client* dst, client_info* src);
-bool client_equals(client_id* left, client_id* right);

@@ -2,7 +2,7 @@
 #include "common/assert_wrapper.h"
 #include "common/log.h"
 #include "common/network.h"
-#include "common/wrapper/client_list.h"
+#include "wrapper/client_list.h"
 #include "network.h"
 #include "network_handlers.h"
 #include "settings.h"

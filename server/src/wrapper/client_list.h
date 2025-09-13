@@ -1,7 +1,7 @@
 #pragma once
 #include "pb.h"
 #include <stdint.h>
-#include "client_info.h"
+#include "common/wrapper/client_info.h"
 
 #define CLIENT_LIST_MAX_COUNT 1024
 
