@@ -38,15 +38,15 @@ void list_remove_first(void* payload, list* list) {
     if (list->length <= 0) { return; }
 
     for (size_t i = 0; i < list->length; i++) {
-        void* curr = (char*) list->array + i * list->payload_size;
+        void* curr = list_get(i, list);
         bool equals = list->equals_fn(curr, payload);
 
         if (!equals) { continue; }
 
         // we need to shift left
         if (i < list->length - 1) {
-            void* dst = (char*) list->array + i * list->payload_size;
-            void* src = (char*) list->array + (i+1) * list->payload_size;
+            void* dst = list_get(i, list);
+            void* src = list_get(i+1, list);
             size_t bytes = list->payload_size * (list->length - i - 1);
             memmove(dst, src, bytes);
         }
@@ -56,11 +56,15 @@ void list_remove_first(void* payload, list* list) {
     }
 }
 
+void* list_get(size_t idx, list* list) {
+    return (char*) list->array + idx * list->payload_size;
+}
+
 void* list_find(void* payload, list* list) {
     if (list->length == 0) { return NULL; }
 
     for (size_t i = 0; i < list->length; i++) {
-        void* curr = (char*) list->array + i * list->payload_size;
+        void* curr = list_get(i, list);
         bool equals = list->equals_fn(curr, payload);
 
         if (equals) { return curr; }
@@ -74,7 +78,7 @@ void* list_push_back(void* payload, list* list) {
         list_resize(list);
     }
 
-    void* dest = (char*) list->array + list->length * list->payload_size;
+    void* dest = list_get(list->length, list);
     memcpy(dest, payload, list->payload_size);
 
     list->length += 1;

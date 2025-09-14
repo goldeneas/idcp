@@ -19,4 +19,5 @@ void* list_push_back(void* payload, list* list);
 void list_resize(list* old);
 void list_remove_first(void* payload, list* list);
 void* list_find(void* payload, list* list);
+void* list_get(size_t idx, list* list);
 void list_destroy(list* list);
