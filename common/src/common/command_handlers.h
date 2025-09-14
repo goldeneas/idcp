@@ -5,4 +5,4 @@
     if (strcmp(buf, command_name) == 0) {                                                       \
         handler_function(buf, context);                                                         \
         return;                                                                                 \
-    }                                                                                           \
+    }
