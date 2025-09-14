@@ -1,19 +1,23 @@
 #include "client_info.h"
 #include "common.pb.h"
 #include "common/wrapper/strncpy.h"
+#include <netinet/in.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 size_t id_count = 1;
 
-client_info client_info_init(const char* name) {
+client_info client_info_init(char* name, char* address, in_port_t port) {
     size_t id = id_count;
     id_count += 1;
 
     client_info client_info;
     client_info.id = id;
-    strncpy(client_info.name, name, CLIENT_LIST_NAME_MAX_SIZE);
-    client_info.name[CLIENT_LIST_NAME_MAX_SIZE - 1] = '\0';
+    client_info.port = port;
+
+    strncpy(client_info.address, address, CLIENT_ADDRESS_MAX_SIZE);
+    name_strncpy(client_info.name, name);
 
     return client_info;
 }

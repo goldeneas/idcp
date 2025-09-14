@@ -6,13 +6,13 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(greet_packet, greet_packet, 2)
+PB_BIND(greet_packet, greet_packet, AUTO)
 
 
-PB_BIND(client_list_request, client_list_request, AUTO)
+PB_BIND(client_list_request_packet, client_list_request_packet, AUTO)
 
 
-PB_BIND(c2d_envelope, c2d_envelope, 2)
+PB_BIND(c2d_envelope, c2d_envelope, AUTO)
 
 
 

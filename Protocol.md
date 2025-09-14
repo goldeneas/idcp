@@ -51,8 +51,7 @@ Each packet is defined in a .proto file. Some more fields may be present in the 
 **Greet Request**
 
         {
-            destination_name: string, [max_size = 256]
-            source_port: number,
+            client_id: uint32,
         }
 
 **Client List Request**

@@ -31,7 +31,7 @@ void connection_cb(uv_stream_t* server, int status) {
         uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_d2c_buffer_cb);
 
         server_context* context = server->loop->data;
-        client_info info = client_info_init(address);
+        client_info info = client_info_init("NAMEHERE", address, port);
         list_push_back(&info, &context->client_list);
 
         send_motd(client, SERVER_NAME, SERVER_MOTD);

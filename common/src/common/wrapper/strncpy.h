@@ -17,7 +17,6 @@
         dst[max_size - 1] = '\0';                                           \
     }                                                                       \
 
-STRNCPY_IMPL(destination_name, greet_packet)
 STRNCPY_IMPL(motd, motd_packet)
 STRNCPY_IMPL(server_name, motd_packet)
 STRNCPY_IMPL(name, common_client)

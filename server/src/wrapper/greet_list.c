@@ -26,12 +26,12 @@ greet_entry greet_entry_init(client_id id) {
     return entry;
 }
 
-void greet_list_set_greet(client_id to, client_id from, list* table) {
-    greet_entry* target = list_find((greet_entry*) &from, table);
+void greet_list_set_greet(client_id to, client_id from, list* greet_list) {
+    greet_entry* target = list_find((greet_entry*) &from, greet_list);
         
     if (target == NULL) {
         greet_entry entry = greet_entry_init(from);
-        target = list_push_back(&entry, table);
+        target = list_push_back(&entry, greet_list);
     }
 
     linked_list* client_list = &target->list; 
