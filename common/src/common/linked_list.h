@@ -15,6 +15,7 @@ typedef struct linked_list_s {
     size_t payload_size;
 } linked_list;
 
+void linked_node_destroy(linked_node* node);
 linked_list linked_list_init(size_t payload_size);
 linked_node* linked_list_append(void* payload, linked_list* list);
 linked_node* linked_list_find_or_append(void* payload, linked_list* list,

@@ -2,6 +2,7 @@
 #include "c2c_packets.pb.h"
 #include "common/list.h"
 #include "common/log.h"
+#include "common/wrapper/client_info.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -60,32 +61,37 @@ linked_node* linked_list_find(void* payload, linked_list* list, linked_list_equa
 }
 
 linked_node* linked_list_create_node(void* payload, size_t payload_size) {
-    linked_node* node = malloc(payload_size);
-    node->payload = payload;
+    linked_node* node = malloc(sizeof(linked_node));
+
+    node->payload = malloc(payload_size);
+    memcpy(node->payload, payload, payload_size);
     node->next = NULL;
 
     return node;
 }
 
+void linked_node_destroy(linked_node* node) {
+    free(node->payload);
+    free(node);
+}
+
 void linked_list_print(linked_list* list, linked_list_print_elem_fn print_elem_fn) {
-    log_info("Linked list at %p\n", (void*)list);
+    log_debug("Printing linked list at %p", (void*)list);
 
     if (!list) {
-        log_info("Linked list is NULL\n");
+        log_debug("Linked list is NULL");
         return;
     }
 
     linked_node* current = list->root;
     size_t index = 0;
     while (current) {
-        printf("Node [%zu] at %p: ", index, (void*)current);
         print_elem_fn(current->payload);
-        printf("\n");
         current = current->next;
         index++;
     }
 
     if (index == 0) {
-        printf("(List is empty)\n");
+        log_debug("List is empty");
     }
 }

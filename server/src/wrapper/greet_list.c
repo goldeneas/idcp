@@ -8,11 +8,18 @@
 #include <stddef.h>
 #include <stdint.h>
 
+void greet_entry_linked_list_print_elem(void* element) {
+    client_id* id = (client_id*) element;
+    log_debug("Link: %u", *id);
+}
+
 void greet_table_print_elem(void* element) {
     greet_entry* entry = (greet_entry*) element;
-    log_info("Entry at %p", entry);
-    log_info("Entry has id %i", entry->client);
-    log_info("Entry has linked_list at %p", entry->list);
+    log_debug("Entry at %p", entry);
+    log_debug("Entry has id %i", entry->client);
+    log_debug("Entry has linked_list at %p", &entry->list);
+
+    linked_list_print(&entry->list, greet_entry_linked_list_print_elem);
 }
 
 bool greet_entry_equals(void* left, void* right) {
@@ -35,7 +42,6 @@ greet_entry greet_entry_init(client_id id) {
     return entry;
 }
 
-// TODO: Something not working when using this function
 void greet_list_set_greet(client_id to, client_id from, list* greet_list) {
     greet_entry* target = list_find((greet_entry*) &from, greet_list, greet_entry_equals);
         

@@ -87,22 +87,20 @@ void* list_push_back(void* payload, list* list) {
 }
 
 void list_print(list* list, list_print_elem_fn print_elem_fn) {
-    log_debug("List at %p", (void*) list);
+    log_debug("Printing list at %p", (void*) list);
 
     if (!list) {
         log_debug("List is NULL");
         return;
     }
 
-    if (!list->array) {
+    if (list->length == 0) {
         log_debug("List has no elements");
         return;
     }
 
     for (size_t i = 0; i < list->length; ++i) {
         void* element = list_get(i, list);
-        printf("  [%zu]: ", i);
         print_elem_fn(element);
-        printf("\n");
     }
 }

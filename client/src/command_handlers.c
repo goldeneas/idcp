@@ -13,11 +13,11 @@
 #include <uv.h>
 #include "network.h"
 
-void on_help(char* args[], client_context* context) {
+void on_help_cmd(char* args[], client_context* context) {
     log_info("No help yet! :)");
 }
 
-void on_greet(char* args[], client_context* context) {
+void on_greet_cmd(char* args[], client_context* context) {
     char* end;
     uint32_t other_id = strtol(args[1], &end, 10);
     uv_tcp_t* server = context->server;
@@ -48,8 +48,8 @@ void handle_tty_command(const uv_buf_t* buf, client_context* context) {
     }
 
     char* cmd_name = args[0];
-    HANDLE_COMMAND_BRANCH(cmd_name, "help", on_help, args, context);
-    HANDLE_COMMAND_BRANCH(cmd_name, "greet", on_greet, args, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "help", on_help_cmd, args, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "greet", on_greet_cmd, args, context);
 
     log_info("Unknown command: '%s'. Type /help for help", cmd_name);
 }
