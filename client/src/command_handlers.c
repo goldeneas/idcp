@@ -1,22 +1,25 @@
 #include "command_handlers.h"
 #include "client_context.h"
+#include "common/list.h"
 #include "common/log.h"
 #include "common/command_handlers.h"
 #include "settings.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <uv.h>
 #include "network.h"
 
-void on_help(char* buf, client_context* context) {
+void on_help(char* args[], client_context* context) {
     log_info("No help yet! :)");
 }
 
-void on_greet(char* buf, client_context* context) {
-    uint32_t other_id = buf[1];
+void on_greet(char* args[], client_context* context) {
+    char* end;
+    uint32_t other_id = strtol(args[1], &end, 10);
     uv_tcp_t* server = context->server;
 
     send_greet(server, other_id);
@@ -34,10 +37,19 @@ void handle_tty_command(const uv_buf_t* buf, client_context* context) {
     if (nl_pos == 0) { return; }
     cmd[nl_pos] = '\0';
 
-    char* base_name = strtok(cmd, " ");
+    int i = 0;
+    char* args[MAX_STDIN_CMD_ARG_SIZE];
+    char* token = strtok(cmd, " ");
 
-    HANDLE_COMMAND_BRANCH(base_name, "help", on_help, cmd, context);
-    HANDLE_COMMAND_BRANCH(base_name, "greet", on_greet, cmd, context);
+    while (token != NULL) {
+        args[i] = token;
+        i += 1;
+        token = strtok(NULL, " ");
+    }
 
-    log_info("Unknown command: '%s'. Type /help for help", base_name);
+    char* cmd_name = args[0];
+    HANDLE_COMMAND_BRANCH(cmd_name, "help", on_help, args, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "greet", on_greet, args, context);
+
+    log_info("Unknown command: '%s'. Type /help for help", cmd_name);
 }
