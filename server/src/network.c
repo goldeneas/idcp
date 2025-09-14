@@ -18,11 +18,11 @@ void send_motd(uv_tcp_t* client, char* server_name, char* motd) {
     SEND_PACKET_BASE(motd, d2c_envelope, packet, client);
 }
 
-void send_client_list(uv_tcp_t* client, client_list* list) {
+void send_client_list(uv_tcp_t* client, list* client_list) {
     client_list_packet packet = client_list_packet_init_zero;
 
-    packet.clients_count = list->clients_count;
-    client_list_strcpy(packet.clients, list);
+    packet.clients_count = client_list->length;
+    client_list_strcpy(packet.clients, client_list);
 
     SEND_PACKET_BASE(client_list, d2c_envelope, packet, client);
 } 

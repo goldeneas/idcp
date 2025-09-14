@@ -24,9 +24,9 @@ void list_destroy(list* list) {
 
 void list_resize(list* old) {
     list list;
-    list.payload_size = list.payload_size;
-    list.capacity = list.capacity * 2;
-    list.length = list.length;
+    list.payload_size = old->payload_size;
+    list.capacity = old->capacity * 2;
+    list.length = old->length;
 
     list.array = malloc(list.payload_size * list.capacity);
     memcpy(list.array, old->array, old->capacity);

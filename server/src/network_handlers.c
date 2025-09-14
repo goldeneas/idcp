@@ -8,8 +8,8 @@
 
 void on_client_list_request(client_list_request* packet, uv_stream_t* stream,
         server_context* context) {
-    client_list* list = &context->client_list;
-    send_client_list((uv_tcp_t*) stream, list);
+    list* client_list = &context->client_list;
+    send_client_list((uv_tcp_t*) stream, client_list);
 }
 
 void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_context* context) {

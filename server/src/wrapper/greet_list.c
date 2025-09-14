@@ -1,4 +1,4 @@
-#include "greet_table.h"
+#include "greet_list.h"
 #include "common/linked_list.h"
 #include "common/list.h"
 #include "common/wrapper/client_info.h"
@@ -13,7 +13,7 @@ bool greet_entry_equals(void* left, void* right) {
     return client_info_equals(&left_entry->client, &right_entry->client);
 }
 
-list greet_table_init(void) {
+list greet_list_init(void) {
     list list = list_init(sizeof(greet_entry), greet_entry_equals);
     return list;
 }
@@ -26,7 +26,7 @@ greet_entry greet_entry_init(client_id id) {
     return entry;
 }
 
-void greet_table_set_greet(client_id to, client_id from, list* table) {
+void greet_list_set_greet(client_id to, client_id from, list* table) {
     greet_entry* target = list_find((greet_entry*) &from, table);
         
     if (target == NULL) {
@@ -42,6 +42,6 @@ void greet_table_set_greet(client_id to, client_id from, list* table) {
     linked_list_append(&to, client_list);
 }
 
-void greet_table_destroy(list* greet_table) {
-    list_destroy(greet_table);
+void greet_list_destroy(list* greet_list) {
+    list_destroy(greet_list);
 }

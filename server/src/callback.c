@@ -1,5 +1,6 @@
 #include "callback.h"
 #include "common/assert_wrapper.h"
+#include "common/list.h"
 #include "common/log.h"
 #include "common/network.h"
 #include "wrapper/client_list.h"
@@ -31,7 +32,7 @@ void connection_cb(uv_stream_t* server, int status) {
 
         server_context* context = server->loop->data;
         client_info info = client_info_init(address);
-        client_list_append(info, &context->client_list);
+        list_push_back(&info, &context->client_list);
 
         send_motd(client, SERVER_NAME, SERVER_MOTD);
     } else {
