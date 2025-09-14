@@ -27,5 +27,7 @@ void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_conte
     HANDLE_PACKET_BRANCH(client_list_request, envelope, c2d_envelope, on_client_list_request,
             stream, context);
 
+    HANDLE_PACKET_BRANCH(greet, envelope, c2d_envelope, on_client_greet, stream, context);
+
     FATAL("Received unhandled packet tag");
 }
