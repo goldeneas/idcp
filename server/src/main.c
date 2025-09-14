@@ -1,3 +1,4 @@
+#include "common/log.h"
 #include "d2c_packets.pb.h"
 #include "server_context.h"
 #include "settings.h"
@@ -21,7 +22,7 @@ int main(void) {
     server.loop->data = &server_context;
 
     struct sockaddr_in address;
-    uv_ip4_addr("0.0.0.0", SERVER_PORT, &address);
+    uv_ip4_addr(SERVER_ADDR, SERVER_PORT, &address);
 
     uv_tcp_bind(&server, (const struct sockaddr*) &address, 0);
     int result = uv_listen((uv_stream_t*) &server, DEFAULT_BACKLOG, connection_cb);
@@ -29,6 +30,8 @@ int main(void) {
         fprintf(stderr, "Listen error: %s\n", uv_strerror(result));
         return -1;
     }
+
+    log_info("Listening on %s:%i", SERVER_ADDR, SERVER_PORT);
 
     uv_run(loop, UV_RUN_DEFAULT);
     uv_loop_close(loop);
