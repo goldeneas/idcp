@@ -1,4 +1,5 @@
 #include "list.h"
+#include "log.h"
 #include "c2c_packets.pb.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -7,13 +8,12 @@
 
 #define LIST_DEFAULT_CAPACITY 10
 
-list list_init(size_t payload_size, list_equals_fn equals_fn) {
+list list_init(size_t payload_size) {
     list list;
     list.payload_size = payload_size;
     list.capacity = LIST_DEFAULT_CAPACITY;
     list.length = 0;
     list.array = malloc(payload_size * LIST_DEFAULT_CAPACITY);
-    list.equals_fn = equals_fn;
 
     return list;
 }
@@ -34,12 +34,12 @@ void list_resize(list* old) {
     list_destroy(old);
 }
 
-void list_remove_first(void* payload, list* list) {
+void list_remove_first(void* payload, list* list, list_equals_fn equals_fn) {
     if (list->length <= 0) { return; }
 
     for (size_t i = 0; i < list->length; i++) {
         void* curr = list_get(i, list);
-        bool equals = list->equals_fn(curr, payload);
+        bool equals = equals_fn(curr, payload);
 
         if (!equals) { continue; }
 
@@ -60,12 +60,12 @@ void* list_get(size_t idx, list* list) {
     return (char*) list->array + idx * list->payload_size;
 }
 
-void* list_find(void* payload, list* list) {
+void* list_find(void* payload, list* list, list_equals_fn equals_fn) {
     if (list->length == 0) { return NULL; }
 
     for (size_t i = 0; i < list->length; i++) {
         void* curr = list_get(i, list);
-        bool equals = list->equals_fn(curr, payload);
+        bool equals = equals_fn(curr, payload);
 
         if (equals) { return curr; }
     }
@@ -84,4 +84,25 @@ void* list_push_back(void* payload, list* list) {
     list->length += 1;
 
     return dest;
+}
+
+void list_print(list* list, list_print_elem_fn print_elem_fn) {
+    log_debug("List at %p", (void*) list);
+
+    if (!list) {
+        log_debug("List is NULL");
+        return;
+    }
+
+    if (!list->array) {
+        log_debug("List has no elements");
+        return;
+    }
+
+    for (size_t i = 0; i < list->length; ++i) {
+        void* element = list_get(i, list);
+        printf("  [%zu]: ", i);
+        print_elem_fn(element);
+        printf("\n");
+    }
 }

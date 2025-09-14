@@ -15,3 +15,4 @@ typedef struct greet_entry_s {
 list greet_list_init(void);
 void greet_list_set_greet(client_id to, client_id from, list* table);
 void greet_list_destroy(list* greet_list);
+void greet_table_print_elem(void* element);

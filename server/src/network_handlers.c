@@ -1,4 +1,5 @@
 #include "network_handlers.h"
+#include "common/list.h"
 #include "common/log.h"
 #include "common/network.h"
 #include "common/network_handlers.h"
@@ -21,6 +22,8 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
 
     client_info* info = server_context_get_client((uv_tcp_t*) stream, context);
     greet_list_set_greet(to, info->id, &context->greet_list);
+
+    list_print(&context->greet_list, greet_table_print_elem);
 }
 
 void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_context* context) {

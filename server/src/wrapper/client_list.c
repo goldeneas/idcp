@@ -5,7 +5,7 @@
 #include "common/wrapper/client_info.h"
 
 list client_list_init(void) {
-    list client_list = list_init(sizeof(client_info), client_info_equals);
+    list client_list = list_init(sizeof(client_info));
     return client_list;
 }
 
