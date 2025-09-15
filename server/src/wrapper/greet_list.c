@@ -16,7 +16,7 @@ void greet_entry_linked_list_print_elem(void* element) {
 void greet_table_print_elem(void* element) {
     greet_entry* entry = (greet_entry*) element;
     log_debug("Entry at %p", entry);
-    log_debug("Entry has id %i", entry->client);
+    log_debug("Entry has id %i", entry->requester_id);
     log_debug("Entry has linked_list at %p", &entry->list);
 
     linked_list_print(&entry->list, greet_entry_linked_list_print_elem);
@@ -26,7 +26,7 @@ bool greet_entry_equals(void* left, void* right) {
     greet_entry* left_entry = (greet_entry*) left;
     greet_entry* right_entry = (greet_entry*) right;
 
-    return client_info_equals(&left_entry->client, &right_entry->client);
+    return client_id_equals(&left_entry->requester_id, &right_entry->requester_id);
 }
 
 list greet_list_init(void) {
@@ -36,7 +36,7 @@ list greet_list_init(void) {
 
 greet_entry greet_entry_init(client_id id) {
     greet_entry entry;
-    entry.client = id;
+    entry.requester_id = id;
     entry.list = linked_list_init(sizeof(client_id));
 
     return entry;

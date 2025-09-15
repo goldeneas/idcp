@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 typedef struct greet_entry_s {
-    client_id client;
+    client_id requester_id;
     linked_list list;
 } greet_entry;
 

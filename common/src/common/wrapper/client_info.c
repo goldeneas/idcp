@@ -1,5 +1,6 @@
 #include "client_info.h"
 #include "common.pb.h"
+#include "common/log.h"
 #include "common/wrapper/strncpy.h"
 #include <netinet/in.h>
 #include <stddef.h>
@@ -26,7 +27,7 @@ bool client_id_equals(void* left, void* right) {
     client_id* left_id = (client_id*) left;
     client_id* right_id = (client_id*) right;
 
-    return left_id == right_id;
+    return *left_id == *right_id;
 }
 
 bool client_info_equals(void* left, void* right) {
