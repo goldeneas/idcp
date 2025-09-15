@@ -13,7 +13,7 @@ void greet_entry_linked_list_print_elem(void* element) {
     log_debug("Link: %u", *id);
 }
 
-void greet_table_print_elem(void* element) {
+void greet_list_print_elem(void* element) {
     greet_entry* entry = (greet_entry*) element;
     log_debug("Entry at %p", entry);
     log_debug("Entry has id %i", entry->requester_id);
@@ -42,8 +42,23 @@ greet_entry greet_entry_init(client_id id) {
     return entry;
 }
 
+bool greet_list_is_greet_mutual(client_id left, client_id right, list* greet_list) {
+    greet_entry* left_entry = list_find((greet_entry*) &left, greet_list, greet_entry_equals);
+    greet_entry* right_entry = list_find((greet_entry*) &right, greet_list, greet_entry_equals);
+
+    if (left_entry == NULL || right_entry == NULL) { return false; }
+
+    bool left_contains = linked_list_contains(&right, &left_entry->list, client_id_equals);
+    bool right_contains = linked_list_contains(&left, &right_entry->list, client_id_equals);
+
+    return left_contains && right_contains;
+}
+
 void greet_list_set_greet(client_id to, client_id from, list* greet_list) {
-    greet_entry* target = list_find((greet_entry*) &from, greet_list, greet_entry_equals);
+    greet_entry tmp;
+    tmp.requester_id = from;
+
+    greet_entry* target = list_find(&tmp, greet_list, greet_entry_equals);
         
     if (target == NULL) {
         greet_entry entry = greet_entry_init(from);

@@ -23,7 +23,8 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     client_info* info = server_context_get_client((uv_tcp_t*) stream, context);
     greet_list_set_greet(to, info->id, &context->greet_list);
 
-    list_print(&context->greet_list, greet_table_print_elem);
+    bool mutual = greet_list_is_greet_mutual(to, info->id, &context->greet_list);
+    log_info("Is mutual: %i", mutual);
 }
 
 void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_context* context) {
