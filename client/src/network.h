@@ -4,6 +4,6 @@
 #include <sys/socket.h>
 #include <uv.h>
 
-void send_client_list_request(uv_tcp_t* server);
-void send_greet(uv_tcp_t* server, client_id client_id);
-void send_message(struct sockaddr* addr, message_packet packet);
+void send_client_list_request(uv_tcp_t* handle);
+void send_greet(uv_tcp_t* handle, client_id client_id);
+void send_message(struct sockaddr* addr, char* text, uv_udp_t* beacon);

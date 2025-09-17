@@ -12,33 +12,28 @@
 #include <uv.h>
 #include <uv/unix.h>
 
-#define SEND_ENVELOPE_BASE(envelope_struct, envelope, stream, write_cb)                             \
-    do {                                                                                            \
-        ASSERT_NE(envelope.which_payload, 0);                                                       \
-                                                                                                    \
-        size_t envelope_size;                                                                       \
-        if (!pb_get_encoded_size(&envelope_size, envelope_struct##_fields, &envelope)) {            \
-            log_error("Could not get encoded size for %s envelope!", #envelope_struct);             \
-            return;                                                                                 \
-        }                                                                                           \
-                                                                                                    \
-        write_req* wr = alloc_write_request(envelope_size);                                       \
-                                                                                                    \
-        pb_ostream_t pb_stream = pb_ostream_from_buffer((pb_byte_t*) wr->buf.base, wr->buf.len);    \
-        bool status = pb_encode(&pb_stream, envelope_struct##_fields, &envelope);                   \
-                                                                                                    \
-        if (!status) {                                                                              \
-            log_error("Something went wrong when encoding motd: %s", PB_GET_ERROR(&pb_stream));     \
-            return;                                                                                 \
-        }                                                                                           \
-                                                                                                    \
-        uv_write(&wr->req, stream, &wr->buf, 1, write_cb);                                          \
-    } while(0)                                                                                      \
+#define SEND_ENVELOPE_BASE(envelope_struct, envelope, stream)                                   \
+    ASSERT_NE(envelope.which_payload, 0);                                                       \
+                                                                                                \
+    size_t envelope_size;                                                                       \
+    if (!pb_get_encoded_size(&envelope_size, envelope_struct##_fields, &envelope)) {            \
+        log_error("Could not get encoded size for %s envelope!", #envelope_struct);             \
+        return;                                                                                 \
+    }                                                                                           \
+                                                                                                \
+    write_req* wr = alloc_write_request(envelope_size);                                         \
+                                                                                                \
+    pb_ostream_t pb_stream = pb_ostream_from_buffer((pb_byte_t*) wr->buf.base, wr->buf.len);    \
+    bool status = pb_encode(&pb_stream, envelope_struct##_fields, &envelope);                   \
+                                                                                                \
+    if (!status) {                                                                              \
+        log_error("Something went wrong when encoding motd: %s", PB_GET_ERROR(&pb_stream));     \
+        return;                                                                                 \
+    }                                                                                           \
 
-write_req* alloc_write_request(size_t base_size) {
+write_req* alloc_write_request(size_t len) {
     write_req* wr = malloc(sizeof(write_req));
-
-    wr->buf = uv_buf_init(malloc(base_size), base_size); 
+    wr->buf = uv_buf_init(malloc(len), len); 
 
     return wr;
 }
@@ -78,14 +73,22 @@ struct sockaddr_storage get_sockaddr(uv_tcp_t* client) {
     return peer_address;
 }
 
-void send_c2d_envelope(c2d_envelope envelope, uv_stream_t* stream, uv_write_cb cb) {
-    SEND_ENVELOPE_BASE(c2d_envelope, envelope, stream, cb);
+void send_c2d_envelope(c2d_envelope envelope, uv_tcp_t* handle, uv_write_cb cb) {
+    uv_stream_t* stream = (uv_stream_t*) handle;
+
+    SEND_ENVELOPE_BASE(c2d_envelope, envelope, stream);
+    uv_write(&wr->wr.tcp, stream, &wr->buf, 1, cb);
 }
 
-void send_d2c_envelope(d2c_envelope envelope, uv_stream_t* stream, uv_write_cb cb) {
-    SEND_ENVELOPE_BASE(d2c_envelope, envelope, stream, cb);
+void send_d2c_envelope(d2c_envelope envelope, uv_tcp_t* handle, uv_write_cb cb) {
+    uv_stream_t* stream = (uv_stream_t*) handle;
+
+    SEND_ENVELOPE_BASE(d2c_envelope, envelope, stream);
+    uv_write(&wr->wr.tcp, stream, &wr->buf, 1, cb);
 }
 
-void send_c2c_envelope(c2c_envelope envelope, uv_stream_t* stream, uv_write_cb cb) {
-    SEND_ENVELOPE_BASE(c2c_envelope, envelope, stream, cb);
+void send_c2c_envelope(c2c_envelope envelope, struct sockaddr* sockaddr, uv_udp_t* beacon,
+        uv_udp_send_cb cb) {
+    SEND_ENVELOPE_BASE(c2c_envelope, envelope, sockaddr);
+    uv_udp_send(&wr->wr.udp, beacon, &wr->buf, 1, sockaddr, cb);
 }

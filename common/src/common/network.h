@@ -7,19 +7,20 @@
 #include <sys/socket.h>
 #include <uv.h>
 
+
 typedef struct write_req_s {
-    uv_write_t req;
     uv_buf_t buf;
+
+    union {
+        uv_write_t tcp;
+        uv_udp_send_t udp;
+    } wr;
 } write_req;
 
-#define SEND_PACKET_BASE(tag_name, envelope_struct, packet, tcp_handle)                 \
-    do {                                                                                \
-        envelope_struct envelope = envelope_struct##_init_zero;                         \
-        envelope.which_payload = envelope_struct##_##tag_name##_tag;                    \
-        envelope.payload.tag_name = packet;                                             \
-                                                                                        \
-        send_##envelope_struct(envelope, (uv_stream_t*) tcp_handle, after_write_cb);    \
-    } while(0)
+#define MAKE_ENVELOPE(tag_name, envelope_struct, packet)                         \
+    envelope_struct envelope = envelope_struct##_init_zero;                         \
+    envelope.which_payload = envelope_struct##_##tag_name##_tag;                    \
+    envelope.payload.tag_name = packet;                                             \
 
 write_req* alloc_write_request(size_t len);
 void destroy_write_request(write_req* req);
@@ -28,6 +29,7 @@ void get_socket_addr(uv_tcp_t* client, char* address, int len);
 in_port_t get_socket_port(uv_tcp_t* client);
 struct sockaddr_storage get_sockaddr(uv_tcp_t* client);
 
-void send_c2d_envelope(c2d_envelope envelope, uv_stream_t* stream, uv_write_cb cb);
-void send_d2c_envelope(d2c_envelope envelope, uv_stream_t* stream, uv_write_cb cb);
-void send_c2c_envelope(c2c_envelope envelope, uv_stream_t* stream, uv_write_cb cb);
+void send_c2d_envelope(c2d_envelope envelope, uv_tcp_t* stream, uv_write_cb cb);
+void send_d2c_envelope(d2c_envelope envelope, uv_tcp_t* stream, uv_write_cb cb);
+void send_c2c_envelope(c2c_envelope envelope, struct sockaddr* sockaddr, uv_udp_t* beacon,
+        uv_udp_send_cb cb);

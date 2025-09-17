@@ -88,6 +88,15 @@ void read_beacon_buffer_cb(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf,
     log_info("Received message from a client");
 }
 
+void after_write_beacon_buffer_cb(uv_udp_send_t* req, int status) {
+    if (status < 0) {
+        log_error("Fatal error when sending UDP: %s", uv_strerror(status));
+        return;
+    }
+
+    free(req);
+}
+
 void close_cb(uv_handle_t* handle) {
     client_context* context = handle->loop->data;
     context->connected_discovery = false;

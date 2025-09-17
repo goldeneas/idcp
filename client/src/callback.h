@@ -8,3 +8,4 @@ void after_write_cb(uv_write_t* wr, int status);
 void close_cb(uv_handle_t* handle);
 void read_beacon_buffer_cb(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf,
         const struct sockaddr* addr, unsigned flags);
+void after_write_beacon_buffer_cb(uv_udp_send_t* req, int status);

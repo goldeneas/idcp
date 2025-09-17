@@ -2,6 +2,7 @@
 #include "c2c_packets.pb.h"
 #include "callback.h"
 #include "c2d_packets.pb.h"
+#include "client_context.h"
 #include "common/log.h"
 #include "common/network.h"
 #include "common/wrapper/client_info.h"
@@ -17,25 +18,23 @@ void send_greet(uv_tcp_t* handle, client_id client_id) {
     packet.client_id = client_id;
     packet.has_client_id = true;
 
-    SEND_PACKET_BASE(greet, c2d_envelope, packet, handle);
+    MAKE_ENVELOPE(greet, c2d_envelope, packet);
+    send_c2d_envelope(envelope, handle, after_write_cb);
 }
 
 void send_client_list_request(uv_tcp_t* handle) {
     client_list_request_packet packet = client_list_request_packet_init_zero;
     
-    SEND_PACKET_BASE(client_list_request, c2d_envelope, packet, handle);
+    MAKE_ENVELOPE(client_list_request, c2d_envelope, packet);
+    send_c2d_envelope(envelope, handle, after_write_cb);
 }
 
-void send_message(struct sockaddr* addr, char* text, size_t len) {
+void send_message(struct sockaddr* addr, char* text, uv_udp_t* beacon) {
     message_packet packet = message_packet_init_zero;
-
-    if (len >= sizeof(packet.text)) {
-        log_error("Tried sending text with length %i: max length reached.");
-        return;
-    }
 
     packet.has_text = true;
     text_strncpy(packet.text, text);
 
-    SEND_P
+    MAKE_ENVELOPE(message, c2c_envelope, packet);
+    send_c2c_envelope(envelope, addr, beacon, after_write_beacon_buffer_cb);
 }
