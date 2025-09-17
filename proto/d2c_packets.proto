@@ -12,6 +12,11 @@ message client_list_packet {
   repeated common.client clients = 1 [(nanopb).max_count = 1024];
 }
 
+message greet_established_packet {
+  optional string client_address = 1 [(nanopb).max_size = 17];
+  optional uint32 client_port = 2;
+}
+
 message d2c_envelope {
   oneof payload {
     motd_packet motd = 1;

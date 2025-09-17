@@ -9,6 +9,10 @@ list client_list_init(void) {
     return client_list;
 }
 
+void client_list_add_client(client_info* client, list* client_list) {
+    list_push_back(client, client_list);
+}
+
 void client_list_strcpy(common_client* dst, list* client_list) {
     for (uint32_t i = 0; i < client_list->length; i++) {
         client_info* entry = list_get(i, client_list);

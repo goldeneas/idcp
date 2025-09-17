@@ -32,7 +32,7 @@ void connection_cb(uv_stream_t* server, int status) {
 
         server_context* context = server->loop->data;
         client_info info = client_info_init("NAMEHERE", address, port);
-        list_push_back(&info, &context->client_list);
+        client_list_add_client(&info, &context->client_list);
 
         send_motd(client, SERVER_NAME, SERVER_MOTD);
     } else {

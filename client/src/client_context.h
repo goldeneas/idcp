@@ -4,7 +4,12 @@
 
 typedef struct client_context_s {
     bool connected;
-    uv_tcp_t* server;
+    char* name;
+    uv_loop_t* loop;
+
+    uv_tcp_t* handle;
+    uv_connect_t* req;
 } client_context;
 
-client_context client_context_init(void);
+client_context client_context_init(uv_loop_t* loop);
+void client_context_set_name(char* name, client_context* context);

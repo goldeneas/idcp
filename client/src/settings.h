@@ -1,6 +1,4 @@
-#define SERVER_PORT 24744
 #define DEFAULT_BACKLOG 128
-#define SERVER_ADDR "0.0.0.0"
 
 #define STDIN_CMD_SYMBOL '/'
 

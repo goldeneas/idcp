@@ -20,6 +20,9 @@ void connect_cb(uv_connect_t* client, int status) {
     uv_read_start(client->handle, alloc_buffer_cb, read_d2c_buffer_cb);
     log_info("Connected to server!");
 
+    client_context* context = client->handle->loop->data;
+    context->connected = true;
+
     send_client_list_request((uv_tcp_t*) client->handle);
 }
 
@@ -75,4 +78,13 @@ void read_tty_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
 
     client_context* context = stream->loop->data;
     handle_tty_command(buf, context);
+}
+
+void close_cb(uv_handle_t* handle) {
+    client_context* context = handle->loop->data;
+    context->connected = false;
+
+    free(handle);
+
+    log_info("Disconnected");
 }

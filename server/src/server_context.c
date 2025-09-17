@@ -1,5 +1,6 @@
 #include "server_context.h"
 #include "common/list.h"
+#include "common/log.h"
 #include "common/network.h"
 #include "common/wrapper/client_info.h"
 #include "wrapper/client_list.h"
@@ -7,6 +8,7 @@
 #include <netinet/in.h>
 #include <stddef.h>
 #include <string.h>
+#include <uv.h>
 
 server_context server_context_init(void) {
     server_context ctx;
@@ -16,7 +18,11 @@ server_context server_context_init(void) {
     return ctx;
 }
 
-client_info* server_context_get_client(uv_tcp_t* client, server_context* context) {
+uv_tcp_t* server_context_get_client(client_id id, server_context* context) {
+    FATAL("Unimplemented");
+}
+
+client_info* server_context_get_client_info(uv_tcp_t* client, server_context* context) {
     list* client_list = &context->client_list; 
 
     char address[40];
