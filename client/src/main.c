@@ -1,3 +1,4 @@
+#include "beacon.h"
 #include "client_context.h"
 #include "settings.h"
 #include "callback.h"
@@ -15,6 +16,8 @@ int main(void) {
     uv_tty_t tty;
     uv_tty_init(loop, &tty, 0, 1);
     uv_read_start((uv_stream_t*) &tty, alloc_buffer_cb, read_tty_buffer_cb);
+
+    beacon_start(BEACON_PORT, loop, &client_context);
 
     uv_run(loop, UV_RUN_DEFAULT);
     uv_loop_close(loop);

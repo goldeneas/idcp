@@ -2,5 +2,7 @@
 
 #define STDIN_CMD_SYMBOL '/'
 
+#define BEACON_PORT 24745
+
 #define MAX_STDIN_CMD_SIZE 256
 #define MAX_STDIN_CMD_ARG_SIZE 32

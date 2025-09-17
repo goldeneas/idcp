@@ -1,4 +1,5 @@
 #include "callback.h"
+#include "c2c_packets.pb.h"
 #include "client_context.h"
 #include "command_handlers.h"
 #include "d2c_packets.pb.h"
@@ -17,11 +18,11 @@ void connect_cb(uv_connect_t* client, int status) {
         return;
     }
 
-    uv_read_start(client->handle, alloc_buffer_cb, read_d2c_buffer_cb);
+    uv_read_start(client->handle, alloc_buffer_cb, read_c2d_buffer_cb);
     log_info("Connected to server!");
 
     client_context* context = client->handle->loop->data;
-    context->connected = true;
+    context->connected_discovery = true;
 
     send_client_list_request((uv_tcp_t*) client->handle);
 }
@@ -37,11 +38,11 @@ void after_write_cb(uv_write_t* wr, int status) {
     free(req->buf.base);
     free(req);
 
-    if (status == 0) { return; }
+    if (status== 0) { return; }
     log_error("Error on write: %s", uv_strerror(status));
 }
 
-void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
+void read_c2d_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     if (nread < 0 && nread != UV_EOF) {
         uv_close((uv_handle_t*) stream, NULL);
         FATAL("nread < 0");
@@ -77,14 +78,19 @@ void read_tty_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
     }
 
     client_context* context = stream->loop->data;
-    handle_tty_command(buf, context);
+    handle_tty_input(buf, context);
+}
+
+void read_beacon_buffer_cb(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf,
+        const struct sockaddr* addr, unsigned flags) {
+    if (nread <= 0) { return; }
+
+    log_info("Received message from a client");
 }
 
 void close_cb(uv_handle_t* handle) {
     client_context* context = handle->loop->data;
-    context->connected = false;
-
-    free(handle);
+    context->connected_discovery = false;
 
     log_info("Disconnected");
 }

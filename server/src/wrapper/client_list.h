@@ -8,3 +8,4 @@
 list client_list_init(void);
 void client_list_add_client(client_info* client, list* client_list);
 void client_list_strcpy(common_client* dst, list* client_list);
+void client_list_remove_client(client_info* client, list* client_list);

@@ -28,7 +28,7 @@ void connection_cb(uv_stream_t* server, int status) {
         int port = get_socket_port(client);
 
         log_info("A new client has connected! [%s:%hu]", address, port);
-        uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_d2c_buffer_cb);
+        uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_c2d_buffer_cb);
 
         server_context* context = server->loop->data;
         client_info info = client_info_init("NAMEHERE", address, port);
@@ -56,20 +56,20 @@ void after_write_cb(uv_write_t* wr, int status) {
     log_error("Error on write: %s", uv_strerror(status));
 }
 
-void read_d2c_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
+void read_c2d_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     if (nread < 0 && nread != UV_EOF) {
         FATAL("nread < 0 while in read_buffer_cb");
     }
 
+    server_context* server_context = stream->loop->data;
     if (nread == UV_EOF) {
         log_info("A client has disconnected");
         return;
     }
 
-    server_context* server_context = stream->loop->data;
     pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
-
     c2d_envelope envelope = c2d_envelope_init_zero;
+
     if (!pb_decode(&pb_stream, c2d_envelope_fields, &envelope)) {
         log_debug("Received a message that is not a c2d_envelope");
         return;

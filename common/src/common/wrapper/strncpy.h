@@ -1,4 +1,5 @@
 #pragma once
+#include "c2c_packets.pb.h"
 #include "common.pb.h"
 #include "d2c_packets.pb.h"
 #include "c2d_packets.pb.h"
@@ -20,3 +21,4 @@
 STRNCPY_IMPL(motd, motd_packet)
 STRNCPY_IMPL(server_name, motd_packet)
 STRNCPY_IMPL(name, common_client)
+STRNCPY_IMPL(text, message_packet)

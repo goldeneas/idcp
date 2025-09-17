@@ -4,7 +4,6 @@ import "nanopb.proto";
 
 message message_packet {
   optional string text = 1 [(nanopb).max_size = 255];
-  optional uint32 size = 2;
 }
 
 message c2c_envelope {

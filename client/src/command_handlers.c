@@ -1,4 +1,5 @@
 #include "command_handlers.h"
+#include "c2c_packets.pb.h"
 #include "client.h"
 #include "client_context.h"
 #include "common/list.h"
@@ -21,7 +22,7 @@ void on_help_cmd(char* args[], client_context* context) {
 void on_greet_cmd(char* args[], client_context* context) {
     char* end;
     uint32_t other_id = strtol(args[1], &end, 10);
-    uv_tcp_t* handle = context->handle;
+    uv_tcp_t* handle = &context->handle;
 
     send_greet(handle, other_id);
 }
@@ -39,11 +40,6 @@ void on_disconnect_cmd(char* args[], client_context* context) {
 }
 
 void handle_tty_command(const uv_buf_t* buf, client_context* context) {
-    if (buf->len <= 0) { return; }
-
-    bool is_command = buf->base[0] == STDIN_CMD_SYMBOL;
-    if (!is_command) { return; }
-
     char* cmd = &buf->base[1];
 
     size_t nl_pos = strcspn(cmd, "\n");
@@ -67,4 +63,14 @@ void handle_tty_command(const uv_buf_t* buf, client_context* context) {
     HANDLE_COMMAND_BRANCH(cmd_name, "disconnect", on_disconnect_cmd, args, context);
 
     log_info("Unknown command: '%s'. Type /help for help", cmd_name);
+}
+
+void handle_tty_input(const uv_buf_t* buf, client_context* context) {
+    if (buf->len <= 0) { return; }
+
+    bool is_command = buf->base[0] == STDIN_CMD_SYMBOL;
+    if (is_command) {
+        handle_tty_command(buf, context);
+        return;
+    }
 }

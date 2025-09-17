@@ -26,7 +26,7 @@ int main(void) {
 
     uv_tcp_bind(&server, (const struct sockaddr*) &address, 0);
     int result = uv_listen((uv_stream_t*) &server, DEFAULT_BACKLOG, connection_cb);
-    if (result) {
+    if (result != 0) {
         fprintf(stderr, "Listen error: %s\n", uv_strerror(result));
         return -1;
     }
