@@ -24,7 +24,7 @@ void send_greet(uv_tcp_t* handle, client_id client_id) {
 
 void send_client_list_request(uv_tcp_t* handle) {
     client_list_request_packet packet = client_list_request_packet_init_zero;
-    
+
     MAKE_ENVELOPE(client_list_request, c2d_envelope, packet);
     send_c2d_envelope(envelope, handle, after_write_cb);
 }
