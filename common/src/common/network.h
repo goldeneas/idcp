@@ -9,12 +9,12 @@
 
 
 typedef struct write_req_s {
-    uv_buf_t buf;
-
     union {
         uv_write_t tcp;
         uv_udp_send_t udp;
     } wr;
+
+    uv_buf_t buf;
 } write_req;
 
 #define MAKE_ENVELOPE(tag_name, envelope_struct, packet)                         \
