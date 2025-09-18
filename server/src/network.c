@@ -4,7 +4,25 @@
 #include "common/wrapper/strncpy.h"
 #include "d2c_packets.pb.h"
 #include <stdint.h>
+#include <sys/socket.h>
 #include <uv.h>
+
+void send_greet_established(uv_tcp_t* client, struct sockaddr_storage* sockaddr) {
+    char address[40];
+    in_port_t port;
+    extract_socket_info(sockaddr, &port, address, 39);
+
+    greet_established_packet packet = greet_established_packet_init_zero;
+
+    packet.has_client_address = true;
+    packet.has_client_port = true;
+
+    packet.client_port = port;
+    client_address_strncpy(packet.client_address, address);
+
+    MAKE_ENVELOPE(greet_established, d2c_envelope, packet)
+    send_d2c_envelope(envelope, client, after_write_cb);
+}
 
 void send_motd(uv_tcp_t* client, char* server_name, char* motd) {
     motd_packet packet = motd_packet_init_zero;

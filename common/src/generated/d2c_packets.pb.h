@@ -35,6 +35,7 @@ typedef struct _d2c_envelope {
     union {
         motd_packet motd;
         client_list_packet client_list;
+        greet_established_packet greet_established;
     } payload;
 } d2c_envelope;
 
@@ -61,6 +62,7 @@ extern "C" {
 #define greet_established_packet_client_port_tag 2
 #define d2c_envelope_motd_tag                    1
 #define d2c_envelope_client_list_tag             2
+#define d2c_envelope_greet_established_tag       3
 
 /* Struct field encoding specification for nanopb */
 #define motd_packet_FIELDLIST(X, a) \
@@ -83,11 +85,13 @@ X(a, STATIC,   OPTIONAL, UINT32,   client_port,       2)
 
 #define d2c_envelope_FIELDLIST(X, a) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload,motd,payload.motd),   1) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (payload,client_list,payload.client_list),   2)
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,client_list,payload.client_list),   2) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,greet_established,payload.greet_established),   3)
 #define d2c_envelope_CALLBACK NULL
 #define d2c_envelope_DEFAULT NULL
 #define d2c_envelope_payload_motd_MSGTYPE motd_packet
 #define d2c_envelope_payload_client_list_MSGTYPE client_list_packet
+#define d2c_envelope_payload_greet_established_MSGTYPE greet_established_packet
 
 extern const pb_msgdesc_t motd_packet_msg;
 extern const pb_msgdesc_t client_list_packet_msg;

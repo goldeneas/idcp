@@ -23,16 +23,18 @@ void connection_cb(uv_stream_t* server, int status) {
     uv_tcp_init(server->loop, client);
 
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
+        in_port_t port;
         char address[40];
-        get_socket_addr(client, address, 39);
-        int port = get_socket_port(client);
+
+        struct sockaddr_storage sockaddr = get_sockaddr(client);
+        extract_socket_info(&sockaddr, &port, address, 39);
 
         log_info("A new client has connected! [%s:%hu]", address, port);
         uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_c2d_buffer_cb);
 
         server_context* context = server->loop->data;
         client_info info = client_info_init("NAMEHERE", address, port);
-        client_list_add_client(&info, &context->client_list);
+        server_context_add_client(&info, client, context);
 
         send_motd(client, SERVER_NAME, SERVER_MOTD);
     } else {

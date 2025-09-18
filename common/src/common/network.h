@@ -7,7 +7,6 @@
 #include <sys/socket.h>
 #include <uv.h>
 
-
 typedef struct write_req_s {
     union {
         uv_write_t tcp;
@@ -17,7 +16,7 @@ typedef struct write_req_s {
     uv_buf_t buf;
 } write_req;
 
-#define MAKE_ENVELOPE(tag_name, envelope_struct, packet)                         \
+#define MAKE_ENVELOPE(tag_name, envelope_struct, packet)                            \
     envelope_struct envelope = envelope_struct##_init_zero;                         \
     envelope.which_payload = envelope_struct##_##tag_name##_tag;                    \
     envelope.payload.tag_name = packet;                                             \
@@ -25,6 +24,7 @@ typedef struct write_req_s {
 write_req* alloc_write_request(size_t len);
 void destroy_write_request(write_req* req);
 
+void extract_socket_info(struct sockaddr_storage* sockaddr, in_port_t* port, char* address, int len);
 void get_socket_addr(uv_tcp_t* client, char* address, int len);
 in_port_t get_socket_port(uv_tcp_t* client);
 struct sockaddr_storage get_sockaddr(uv_tcp_t* client);

@@ -42,27 +42,14 @@ in_port_t get_socket_port(uv_tcp_t* client) {
     in_port_t port;
     struct sockaddr_storage peer_address = get_sockaddr(client);
 
-    if (peer_address.ss_family == AF_INET6) {
-        struct sockaddr_in6* addr_in = (struct sockaddr_in6*) &peer_address; 
-        port = addr_in->sin6_port;
-    } else {
-        struct sockaddr_in* addr_in = (struct sockaddr_in*) &peer_address;
-        port = addr_in->sin_port;
-    }
+    extract_socket_info(&peer_address, &port, NULL, 0);
 
     return ntohs(port);
 }
 
 void get_socket_addr(uv_tcp_t* client, char* address, int len) {
     struct sockaddr_storage peer_address = get_sockaddr(client);
-
-    if (peer_address.ss_family == AF_INET6) {
-        struct sockaddr_in6* addr_in = (struct sockaddr_in6*) &peer_address; 
-        uv_ip6_name(addr_in, address, len);
-    } else {
-        struct sockaddr_in* addr_in = (struct sockaddr_in*) &peer_address;
-        uv_ip4_name(addr_in, address, len);
-    }
+    extract_socket_info(&peer_address, NULL, address, len);
 }
 
 struct sockaddr_storage get_sockaddr(uv_tcp_t* client) {
@@ -71,6 +58,29 @@ struct sockaddr_storage get_sockaddr(uv_tcp_t* client) {
     uv_tcp_getpeername(client, (struct sockaddr*) &peer_address, &name_len);
 
     return peer_address;
+}
+
+void extract_socket_info(struct sockaddr_storage* sockaddr, in_port_t* port, char* address,
+        int len) {
+    if (sockaddr != NULL) {
+        if (sockaddr->ss_family == AF_INET6) {
+            struct sockaddr_in6* addr_in = (struct sockaddr_in6*) sockaddr; 
+            uv_ip6_name(addr_in, address, len);
+        } else {
+            struct sockaddr_in* addr_in = (struct sockaddr_in*) sockaddr;
+            uv_ip4_name(addr_in, address, len);
+        }
+    }
+
+    if (port != NULL) {
+        if (sockaddr->ss_family == AF_INET6) {
+            struct sockaddr_in6* addr_in = (struct sockaddr_in6*) sockaddr; 
+            *port = addr_in->sin6_port;
+        } else {
+            struct sockaddr_in* addr_in = (struct sockaddr_in*) sockaddr;
+            *port = addr_in->sin_port;
+        }
+    }
 }
 
 void send_c2d_envelope(c2d_envelope envelope, uv_tcp_t* handle, uv_write_cb cb) {

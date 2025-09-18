@@ -21,5 +21,6 @@ message d2c_envelope {
   oneof payload {
     motd_packet motd = 1;
     client_list_packet client_list = 2;
+    greet_established_packet greet_established = 3;
   }
 }
