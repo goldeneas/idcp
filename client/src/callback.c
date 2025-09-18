@@ -33,12 +33,6 @@ void alloc_buffer_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf) 
 }
 
 void after_write_cb(uv_write_t* wr, int status) {
-    write_req* req = (write_req*) wr;
-
-    // TODO: Might be breaking here
-    free(req->buf.base);
-    free(req);
-
     if (status== 0) { return; }
     log_error("Error on write: %s", uv_strerror(status));
 }

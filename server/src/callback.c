@@ -58,7 +58,8 @@ void after_write_cb(uv_write_t* wr, int status) {
 
 void read_c2d_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     if (nread < 0 && nread != UV_EOF) {
-        FATAL("nread < 0 while in read_buffer_cb");
+        log_warn("nread < 0 while in read_buffer_cb");
+        return;
     }
 
     server_context* server_context = stream->loop->data;
