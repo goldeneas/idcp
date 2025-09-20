@@ -7,6 +7,7 @@
 #include "common/network.h"
 #include "common/wrapper/client_info.h"
 #include "common/wrapper/strncpy.h"
+#include "settings.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -15,8 +16,10 @@
 void send_greet(uv_tcp_t* handle, client_id client_id) {
     greet_packet packet = greet_packet_init_zero;
 
+    packet.beacon_port = BEACON_PORT;
     packet.client_id = client_id;
     packet.has_client_id = true;
+    packet.has_beacon_port = true;
 
     MAKE_ENVELOPE(greet, c2d_envelope, packet);
     send_c2d_envelope(envelope, handle, after_write_cb);

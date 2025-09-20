@@ -13,6 +13,8 @@
 typedef struct _greet_packet {
     bool has_client_id;
     uint32_t client_id;
+    bool has_beacon_port;
+    uint32_t beacon_port;
 } greet_packet;
 
 typedef struct _client_list_request_packet {
@@ -33,21 +35,23 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define greet_packet_init_default                {false, 0}
+#define greet_packet_init_default                {false, 0, false, 0}
 #define client_list_request_packet_init_default  {0}
 #define c2d_envelope_init_default                {0, {greet_packet_init_default}}
-#define greet_packet_init_zero                   {false, 0}
+#define greet_packet_init_zero                   {false, 0, false, 0}
 #define client_list_request_packet_init_zero     {0}
 #define c2d_envelope_init_zero                   {0, {greet_packet_init_zero}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define greet_packet_client_id_tag               1
+#define greet_packet_beacon_port_tag             2
 #define c2d_envelope_greet_tag                   1
 #define c2d_envelope_client_list_request_tag     2
 
 /* Struct field encoding specification for nanopb */
 #define greet_packet_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, UINT32,   client_id,         1)
+X(a, STATIC,   OPTIONAL, UINT32,   client_id,         1) \
+X(a, STATIC,   OPTIONAL, UINT32,   beacon_port,       2)
 #define greet_packet_CALLBACK NULL
 #define greet_packet_DEFAULT NULL
 
@@ -75,9 +79,9 @@ extern const pb_msgdesc_t c2d_envelope_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define C2D_PACKETS_PB_H_MAX_SIZE                c2d_envelope_size
-#define c2d_envelope_size                        8
+#define c2d_envelope_size                        14
 #define client_list_request_packet_size          0
-#define greet_packet_size                        6
+#define greet_packet_size                        12
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -10,8 +10,15 @@
 void handle_d2c_packet(d2c_envelope* envelope, uv_stream_t* stream, client_context* context) {
     HANDLE_PACKET_BRANCH(motd, envelope, d2c_envelope, on_motd, stream, context);
     HANDLE_PACKET_BRANCH(client_list, envelope, d2c_envelope, on_client_list, stream, context);
+    HANDLE_PACKET_BRANCH(greet_established, envelope, d2c_envelope, on_greet_established, stream, context);
 
     FATAL("Received unhandled packet tag");
+}
+
+void on_greet_established(greet_established_packet* packet, uv_stream_t* stream,
+        client_context* context) {
+    log_info("Client has accepted our greeting. Connection will now be established.");
+    log_info("Client is at %s:%i", packet->client_address, packet->client_port);
 }
 
 void on_motd(motd_packet* packet, uv_stream_t* stream, client_context* context) {

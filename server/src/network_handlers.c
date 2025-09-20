@@ -31,7 +31,7 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     }
 
     client_id from = info->id;
-    greet_list_set_greet(to, from, &context->greet_list);
+    greet_list_set_greet(to, from, packet->beacon_port, &context->greet_list);
 
     bool is_mutual = greet_list_is_greet_mutual(to, from, &context->greet_list);
     if (!is_mutual) { return; }
@@ -43,8 +43,11 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     uv_tcp_t* left_handle = address_list_get_stream(from, address_list);
     uv_tcp_t* right_handle = address_list_get_stream(to, address_list);
 
-    send_greet_established(left_handle, left_addr);
-    send_greet_established(right_handle, right_addr);
+    in_port_t left_port = greet_list_get_beacon_port(from, to, &context->greet_list);
+    in_port_t right_port = greet_list_get_beacon_port(to, from, &context->greet_list);
+
+    send_greet_established(left_handle, left_addr, left_port);
+    send_greet_established(right_handle, right_addr, right_port);
 }
 
 void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_context* context) {

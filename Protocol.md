@@ -52,6 +52,7 @@ Each packet is defined in a .proto file. Some more fields may be present in the 
 
         {
             client_id: uint32,
+            beacon_port: uint32,
         }
 
 **Client List Request**

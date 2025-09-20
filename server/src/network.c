@@ -3,11 +3,13 @@
 #include "common/network.h"
 #include "common/wrapper/strncpy.h"
 #include "d2c_packets.pb.h"
+#include <netinet/in.h>
 #include <stdint.h>
 #include <sys/socket.h>
 #include <uv.h>
 
-void send_greet_established(uv_tcp_t* client, struct sockaddr_storage* sockaddr) {
+void send_greet_established(uv_tcp_t* client, struct sockaddr_storage* sockaddr,
+        in_port_t beacon_port) {
     char address[40];
     in_port_t port;
     socket_extract_info(sockaddr, &port, address, 39);
@@ -17,7 +19,7 @@ void send_greet_established(uv_tcp_t* client, struct sockaddr_storage* sockaddr)
     packet.has_client_address = true;
     packet.has_client_port = true;
 
-    packet.client_port = port;
+    packet.client_port = beacon_port;
     client_address_strncpy(packet.client_address, address);
 
     MAKE_ENVELOPE(greet_established, d2c_envelope, packet)

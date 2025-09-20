@@ -2,6 +2,7 @@ syntax = "proto2";
 
 message greet_packet {
   optional uint32 client_id = 1;
+  optional uint32 beacon_port = 2;
 }
 
 message client_list_request_packet {
