@@ -10,6 +10,7 @@
 #include <stdatomic.h>
 #include <stddef.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <uv.h>
 
 server_context server_context_init(void) {
@@ -34,11 +35,15 @@ client_info* server_context_get_client_info(uv_tcp_t* client, server_context* co
     list* client_list = &context->client_list; 
 
     char address[40];
-    get_socket_addr(client, address, 39);
-    in_port_t port = get_socket_port(client);
+    in_port_t port;
+    struct sockaddr_storage storage = socket_get_sockaddr_storage(client);
+    socket_extract_info(&storage, &port, address, 39);
+
+    log_info("Searching for %s:%i", address, port);
 
     for (size_t i = 0; i < client_list->length; i++) {
         client_info* curr = list_get(i, client_list);
+        log_info("Curr info is %s:%i", curr->address, curr->port);
         if (curr->port != port) { continue; }
         if (strcmp(curr->address, address) != 0) { continue; }
 

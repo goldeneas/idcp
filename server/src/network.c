@@ -10,7 +10,7 @@
 void send_greet_established(uv_tcp_t* client, struct sockaddr_storage* sockaddr) {
     char address[40];
     in_port_t port;
-    extract_socket_info(sockaddr, &port, address, 39);
+    socket_extract_info(sockaddr, &port, address, 39);
 
     greet_established_packet packet = greet_established_packet_init_zero;
 

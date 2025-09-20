@@ -38,21 +38,7 @@ write_req* alloc_write_request(size_t len) {
     return wr;
 }
 
-in_port_t get_socket_port(uv_tcp_t* client) {
-    in_port_t port;
-    struct sockaddr_storage peer_address = get_sockaddr(client);
-
-    extract_socket_info(&peer_address, &port, NULL, 0);
-
-    return ntohs(port);
-}
-
-void get_socket_addr(uv_tcp_t* client, char* address, int len) {
-    struct sockaddr_storage peer_address = get_sockaddr(client);
-    extract_socket_info(&peer_address, NULL, address, len);
-}
-
-struct sockaddr_storage get_sockaddr(uv_tcp_t* client) {
+struct sockaddr_storage socket_get_sockaddr_storage(uv_tcp_t* client) {
     struct sockaddr_storage peer_address;
     int name_len = sizeof(struct sockaddr_storage);
     uv_tcp_getpeername(client, (struct sockaddr*) &peer_address, &name_len);
@@ -60,7 +46,7 @@ struct sockaddr_storage get_sockaddr(uv_tcp_t* client) {
     return peer_address;
 }
 
-void extract_socket_info(struct sockaddr_storage* sockaddr, in_port_t* port, char* address,
+void socket_extract_info(struct sockaddr_storage* sockaddr, in_port_t* port, char* address,
         int len) {
     if (sockaddr != NULL) {
         if (sockaddr->ss_family == AF_INET6) {

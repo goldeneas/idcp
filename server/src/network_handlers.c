@@ -24,11 +24,16 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     if (to == 0) { return; }
 
     client_info* info = server_context_get_client_info((uv_tcp_t*) stream, context);
+    if (info == NULL) {
+        log_info("Could not get client info");
+        return;
+    }
+
     client_id from = info->id;
     greet_list_set_greet(to, from, &context->greet_list);
 
     bool is_mutual = greet_list_is_greet_mutual(to, from, &context->greet_list);
-    if (!is_mutual) { return; }
+    if (true) { return; }
 
     list* address_list = &context->address_list;
     struct sockaddr_storage* left_addr = address_list_get_address(from, address_list);
