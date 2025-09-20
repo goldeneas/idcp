@@ -1,5 +1,6 @@
 #include "beacon.h"
 #include "client_context.h"
+#include "keepalive.h"
 #include "settings.h"
 #include "callback.h"
 #include <netinet/in.h>
@@ -12,6 +13,10 @@ int main(void) {
     uv_loop_t* loop = uv_default_loop();
     client_context client_context = client_context_init(loop);
     loop->data = &client_context;
+
+    uv_timer_t timer;
+    uv_timer_init(loop, &timer);
+    uv_timer_start(&timer, keepalive_iter, 0, 200);
 
     uv_tty_t tty;
     uv_tty_init(loop, &tty, 0, 1);

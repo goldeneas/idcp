@@ -13,6 +13,13 @@
 #include <string.h>
 #include <uv.h>
 
+void send_keepalive(struct sockaddr* addr, uv_udp_t* beacon) {
+    keepalive_packet packet = keepalive_packet_init_zero;
+
+    MAKE_ENVELOPE(keepalive, c2c_envelope, packet);
+    send_c2c_envelope(envelope, addr, beacon, after_write_beacon_buffer_cb);
+}
+
 void send_greet(uv_tcp_t* handle, client_id client_id) {
     greet_packet packet = greet_packet_init_zero;
 

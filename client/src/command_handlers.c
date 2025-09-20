@@ -73,4 +73,6 @@ void handle_tty_input(const uv_buf_t* buf, client_context* context) {
         handle_tty_command(buf, context);
         return;
     }
+
+    send_message(addr, buf->base, &context->beacon);
 }

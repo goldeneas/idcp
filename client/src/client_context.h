@@ -5,6 +5,8 @@
 #include <uv.h>
 
 typedef struct client_context_s {
+    bool connected_discovery;
+
     list peer_list;
 
     uv_udp_t beacon;
