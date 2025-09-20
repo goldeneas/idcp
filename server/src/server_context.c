@@ -43,7 +43,6 @@ client_info* server_context_get_client_info(uv_tcp_t* client, server_context* co
 
     for (size_t i = 0; i < client_list->length; i++) {
         client_info* curr = list_get(i, client_list);
-        log_info("Curr info is %s:%i", curr->address, curr->port);
         if (curr->port != port) { continue; }
         if (strcmp(curr->address, address) != 0) { continue; }
 

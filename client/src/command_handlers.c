@@ -15,11 +15,11 @@
 #include <uv.h>
 #include "network.h"
 
-void on_help_cmd(char* args[], client_context* context) {
+void on_help_cmd(char* args[], int args_len, client_context* context) {
     log_info("No help yet! :)");
 }
 
-void on_greet_cmd(char* args[], client_context* context) {
+void on_greet_cmd(char* args[], int args_len, client_context* context) {
     char* end;
     uint32_t other_id = strtol(args[1], &end, 10);
     uv_tcp_t* handle = &context->handle;
@@ -27,15 +27,15 @@ void on_greet_cmd(char* args[], client_context* context) {
     send_greet(handle, other_id);
 }
 
-void on_connect_cmd(char* args[], client_context* context) {
+void on_connect_cmd(char* args[], int args_len, client_context* context) {
     char* end;
-    char* address = args[1];
-    uint32_t port = strtol(args[2], &end,10);
+    char* address = args_len >= 2 ? args[1] : "0.0.0.0";
+    uint32_t port = args_len >= 3 ?  strtol(args[2], &end, 10) : DEFAULT_CONNECT_PORT;
 
     client_connect(address, port, context->loop, context);
 }
 
-void on_disconnect_cmd(char* args[], client_context* context) {
+void on_disconnect_cmd(char* args[], int args_len, client_context* context) {
     client_disconnect(context);
 }
 
@@ -46,21 +46,21 @@ void handle_tty_command(const uv_buf_t* buf, client_context* context) {
     if (nl_pos == 0) { return; }
     cmd[nl_pos] = '\0';
 
-    int i = 0;
+    int args_len = 0;
     char* args[MAX_STDIN_CMD_ARG_SIZE];
     char* token = strtok(cmd, " ");
 
     while (token != NULL) {
-        args[i] = token;
-        i += 1;
+        args[args_len] = token;
+        args_len += 1;
         token = strtok(NULL, " ");
     }
 
     char* cmd_name = args[0];
-    HANDLE_COMMAND_BRANCH(cmd_name, "help", on_help_cmd, args, context);
-    HANDLE_COMMAND_BRANCH(cmd_name, "greet", on_greet_cmd, args, context);
-    HANDLE_COMMAND_BRANCH(cmd_name, "connect", on_connect_cmd, args, context);
-    HANDLE_COMMAND_BRANCH(cmd_name, "disconnect", on_disconnect_cmd, args, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "help", on_help_cmd, args, args_len, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "greet", on_greet_cmd, args, args_len, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "connect", on_connect_cmd, args, args_len, context);
+    HANDLE_COMMAND_BRANCH(cmd_name, "disconnect", on_disconnect_cmd, args, args_len, context);
 
     log_info("Unknown command: '%s'. Type /help for help", cmd_name);
 }
