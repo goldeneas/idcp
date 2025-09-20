@@ -23,7 +23,8 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     client_id to = packet->client_id;
     if (to == 0) { return; }
 
-    client_info* info = server_context_get_client_info((uv_tcp_t*) stream, context);
+    list* client_list = &context->client_list;
+    client_info* info = client_list_get_client_info((uv_tcp_t*) stream, client_list);
     if (info == NULL) {
         log_info("Could not get client info");
         return;
@@ -33,7 +34,7 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     greet_list_set_greet(to, from, &context->greet_list);
 
     bool is_mutual = greet_list_is_greet_mutual(to, from, &context->greet_list);
-    if (true) { return; }
+    if (!is_mutual) { return; }
 
     list* address_list = &context->address_list;
     struct sockaddr_storage* left_addr = address_list_get_address(from, address_list);
