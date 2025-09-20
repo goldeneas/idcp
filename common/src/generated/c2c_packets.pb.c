@@ -9,6 +9,9 @@
 PB_BIND(message_packet, message_packet, 2)
 
 
+PB_BIND(keepalive_packet, keepalive_packet, AUTO)
+
+
 PB_BIND(c2c_envelope, c2c_envelope, 2)
 
 

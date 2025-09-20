@@ -6,8 +6,13 @@ message message_packet {
   optional string text = 1 [(nanopb).max_size = 255];
 }
 
+message keepalive_packet {
+
+}
+
 message c2c_envelope {
   oneof payload {
     message_packet message = 1;
+    keepalive_packet keepalive = 2;
   }
 }

@@ -91,3 +91,8 @@ Each packet is defined in a .proto file. Some more fields may be present in the 
             text: string, [max_size = 256]
             size: uint,
         }
+
+**Keepalive**
+
+        {
+        }

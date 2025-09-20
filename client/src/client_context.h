@@ -1,13 +1,11 @@
 #pragma once
+#include "common/list.h"
 #include <stdbool.h>
 #include <sys/socket.h>
 #include <uv.h>
 
 typedef struct client_context_s {
-    bool connected_discovery;
-
-    bool connected_client;
-    struct sockaddr client_addr;
+    list peer_list;
 
     uv_udp_t beacon;
     uv_tcp_t handle;

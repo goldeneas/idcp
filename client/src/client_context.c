@@ -1,11 +1,15 @@
 #include "client_context.h"
+#include "common/list.h"
+#include "common/wrapper/client_info.h"
+#include "peer_list.h"
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <uv.h>
 
 client_context client_context_init(uv_loop_t* loop) {
     client_context context;
-    context.connected_discovery = false;
-    context.connected_client = false;
     context.loop = loop;
+    context.peer_list = peer_list_init();
 
     return context;
 }

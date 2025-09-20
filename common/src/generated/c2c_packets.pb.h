@@ -15,10 +15,15 @@ typedef struct _message_packet {
     char text[255];
 } message_packet;
 
+typedef struct _keepalive_packet {
+    char dummy_field;
+} keepalive_packet;
+
 typedef struct _c2c_envelope {
     pb_size_t which_payload;
     union {
         message_packet message;
+        keepalive_packet keepalive;
     } payload;
 } c2c_envelope;
 
@@ -29,13 +34,16 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define message_packet_init_default              {false, ""}
+#define keepalive_packet_init_default            {0}
 #define c2c_envelope_init_default                {0, {message_packet_init_default}}
 #define message_packet_init_zero                 {false, ""}
+#define keepalive_packet_init_zero               {0}
 #define c2c_envelope_init_zero                   {0, {message_packet_init_zero}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define message_packet_text_tag                  1
 #define c2c_envelope_message_tag                 1
+#define c2c_envelope_keepalive_tag               2
 
 /* Struct field encoding specification for nanopb */
 #define message_packet_FIELDLIST(X, a) \
@@ -43,22 +51,32 @@ X(a, STATIC,   OPTIONAL, STRING,   text,              1)
 #define message_packet_CALLBACK NULL
 #define message_packet_DEFAULT NULL
 
+#define keepalive_packet_FIELDLIST(X, a) \
+
+#define keepalive_packet_CALLBACK NULL
+#define keepalive_packet_DEFAULT NULL
+
 #define c2c_envelope_FIELDLIST(X, a) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (payload,message,payload.message),   1)
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,message,payload.message),   1) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,keepalive,payload.keepalive),   2)
 #define c2c_envelope_CALLBACK NULL
 #define c2c_envelope_DEFAULT NULL
 #define c2c_envelope_payload_message_MSGTYPE message_packet
+#define c2c_envelope_payload_keepalive_MSGTYPE keepalive_packet
 
 extern const pb_msgdesc_t message_packet_msg;
+extern const pb_msgdesc_t keepalive_packet_msg;
 extern const pb_msgdesc_t c2c_envelope_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define message_packet_fields &message_packet_msg
+#define keepalive_packet_fields &keepalive_packet_msg
 #define c2c_envelope_fields &c2c_envelope_msg
 
 /* Maximum encoded size of messages (where known) */
 #define C2C_PACKETS_PB_H_MAX_SIZE                c2c_envelope_size
 #define c2c_envelope_size                        260
+#define keepalive_packet_size                    0
 #define message_packet_size                      257
 
 #ifdef __cplusplus
