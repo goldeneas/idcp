@@ -22,8 +22,8 @@ void client_list_remove_client(client_info* client, list* client_list) {
 client_info* client_list_get_client_info(uv_tcp_t* client, list* client_list) {
     char address[40];
     in_port_t port;
-    struct sockaddr_storage storage = socket_get_sockaddr_storage(client);
-    socket_extract_info(&storage, &port, address, 39);
+    struct sockaddr_storage storage = socket_get_sockaddr_storage_ex(client);
+    socket_extract_info(&storage, &port, address, NULL, 39);
 
     for (size_t i = 0; i < client_list->length; i++) {
         client_info* curr = list_get(i, client_list);

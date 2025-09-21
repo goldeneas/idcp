@@ -80,7 +80,21 @@ void read_beacon_buffer_cb(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf,
         const struct sockaddr* addr, unsigned flags) {
     if (nread <= 0) { return; }
 
-    log_info("Received message from a client");
+    if (nread == UV_EOF) {
+        log_info("Connection to client lost.");
+        return;
+    }
+
+    client_context* client_context = handle->loop->data;
+    pb_istream_t pb_stream = pb_istream_from_buffer((uint8_t*) buf->base, nread);
+
+    c2c_envelope envelope = c2c_envelope_init_zero;
+    if (!pb_decode(&pb_stream, c2c_envelope_fields, &envelope)) {
+        log_debug("Beacon received a message that is not a c2c_envelope");
+        return;
+    }
+
+    handle_c2c_packet(&envelope, addr, client_context);
 }
 
 void after_write_beacon_buffer_cb(uv_udp_send_t* req, int status) {

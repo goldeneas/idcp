@@ -26,8 +26,8 @@ void connection_cb(uv_stream_t* server, int status) {
         in_port_t port;
         char address[40];
 
-        struct sockaddr_storage sockaddr = socket_get_sockaddr_storage(client);
-        socket_extract_info(&sockaddr, &port, address, 39);
+        struct sockaddr_storage sockaddr = socket_get_sockaddr_storage_ex(client);
+        socket_extract_info(&sockaddr, &port, address, NULL, 39);
 
         log_info("A new client has connected! [%s:%hu]", address, port);
         uv_read_start((uv_stream_t*) client, alloc_buffer_cb, read_c2d_buffer_cb);

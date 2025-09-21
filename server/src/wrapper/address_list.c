@@ -19,7 +19,7 @@ list address_list_init(void) {
 }
 
 void address_list_add_address(client_id id, uv_tcp_t* stream, list* address_list) {
-    struct sockaddr_storage storage = socket_get_sockaddr_storage(stream);
+    struct sockaddr_storage storage = socket_get_sockaddr_storage_ex(stream);
 
     address_entry entry = {
         .addr_storage = storage,

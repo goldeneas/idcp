@@ -15,6 +15,7 @@ message client_list_packet {
 message greet_established_packet {
   optional string client_address = 1 [(nanopb).max_size = 17];
   optional uint32 client_port = 2;
+  optional uint32 sa_family = 3;
 }
 
 message d2c_envelope {

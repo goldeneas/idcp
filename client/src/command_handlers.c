@@ -5,6 +5,9 @@
 #include "common/list.h"
 #include "common/log.h"
 #include "common/command_handlers.h"
+#include "common/network.h"
+#include "common/str_utils.h"
+#include "peer_list.h"
 #include "settings.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -41,10 +44,7 @@ void on_disconnect_cmd(char* args[], int args_len, client_context* context) {
 
 void handle_tty_command(const uv_buf_t* buf, client_context* context) {
     char* cmd = &buf->base[1];
-
-    size_t nl_pos = strcspn(cmd, "\n");
-    if (nl_pos == 0) { return; }
-    cmd[nl_pos] = '\0';
+    str_remove_nl(cmd);
 
     int args_len = 0;
     char* args[MAX_STDIN_CMD_ARG_SIZE];
@@ -74,5 +74,12 @@ void handle_tty_input(const uv_buf_t* buf, client_context* context) {
         return;
     }
 
-    send_message(addr, buf->base, &context->beacon);
+    list* peer_list = &context->peer_list;
+
+    for (size_t i = 0; i < peer_list->length; i++) {
+        peer_entry* entry = list_get(i, peer_list);
+        struct sockaddr_storage storage = socket_get_sockaddr_storage(entry->address, entry->port,
+                entry->sa_family);
+        send_message((struct sockaddr*) &storage, buf->base, &context->beacon);
+    }
 }
