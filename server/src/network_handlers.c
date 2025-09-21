@@ -46,8 +46,8 @@ void on_client_greet(greet_packet* packet, uv_stream_t* stream, server_context* 
     in_port_t left_port = greet_list_get_beacon_port(from, to, &context->greet_list);
     in_port_t right_port = greet_list_get_beacon_port(to, from, &context->greet_list);
 
-    send_greet_established(left_handle, left_addr, left_port);
-    send_greet_established(right_handle, right_addr, right_port);
+    send_greet_established(left_handle, right_addr, right_port);
+    send_greet_established(right_handle, left_addr, left_port);
 }
 
 void handle_c2d_packet(c2d_envelope* envelope, uv_stream_t* stream, server_context* context) {

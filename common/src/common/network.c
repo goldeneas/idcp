@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <time.h>
 #include <uv.h>
 #include <uv/unix.h>
 
@@ -89,10 +90,10 @@ void socket_extract_info(struct sockaddr_storage* sockaddr, in_port_t* port, cha
     if (port != NULL) {
         if (sockaddr->ss_family == AF_INET6) {
             struct sockaddr_in6* addr_in = (struct sockaddr_in6*) sockaddr; 
-            *port = addr_in->sin6_port;
+            *port = ntohs(addr_in->sin6_port);
         } else {
             struct sockaddr_in* addr_in = (struct sockaddr_in*) sockaddr;
-            *port = addr_in->sin_port;
+            *port = ntohs(addr_in->sin_port);
         }
     }
 

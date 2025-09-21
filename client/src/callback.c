@@ -57,7 +57,6 @@ void read_c2d_buffer_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
         return;
     }
 
-    log_debug("Received message from server");
     handle_d2c_packet(&envelope, stream, client_context);
 }
 
