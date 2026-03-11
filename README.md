@@ -8,14 +8,6 @@ The system consists of two main components:
 
 2.  **Client:** A command-line application that connects to the discovery server, requests to "greet" other clients, and then establishes direct UDP-based P2P communication with them.
 
-### Project Status & Honest Assessment
-
-The `Protocol.md` file in this repository describes ambitions for an "E2E-Encrypted, Anonymous, Decentralized, P2P chat." However, the current implementation does **not** meet these goals.
-
-* **Not Encrypted:** There is no encryption logic in the client or server. All messages, both to the server (TCP) and between peers (UDP), are sent in plaintext (after Protobuf serialization). See `client/src/network.c` and `server/src/network.c`.
-
-This project is a **functional proof-of-concept for a centrally-brokered (hybrid) P2P chat system**, but it does not currently meet all of its stated security or privacy goals.
-
 ---
 
 ## How It Works
